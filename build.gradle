@@ -1,0 +1,47 @@
+plugins {
+  id "java"
+  id "application"
+  id "checkstyle"
+  id "com.github.spotbugs" version "3.0.0"
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+	testCompile 'org.junit.jupiter:junit-jupiter:5.5.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+}
+
+application {
+    mainClassName = 'de.lmu.ifi.sosylab.HelloWorld'
+}
+
+jar {
+  manifest {
+    attributes(
+      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': 'de.lmu.ifi.sosylab.HelloWorld'
+    )
+  }
+}
+
+checkstyle {
+  configFile = file('test/checkstyle.xml')
+  maxWarnings = 0
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+}
