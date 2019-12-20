@@ -6,6 +6,7 @@ public enum Player {
     BLACK("Black");
 
     private final String playerName;
+	//private int diskCount = 32;
 
     /**
      * Creates a new <code>Player</code>-object that takes a string argument for the internal
@@ -21,6 +22,15 @@ public enum Player {
     public String toString() {
         return playerName;
     }
+
+	/*public int getDiskCount(){
+		return diskCount;
+	}
+
+
+	void setDiskCount(int diskCount){
+		this.diskCount = diskCount;
+	}*/
 
     /**
      * Return the opponent of the passed <code>player</code>-object.

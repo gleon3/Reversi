@@ -100,15 +100,36 @@ public class Reversi implements Model {
 
     @Override
     public synchronized boolean move(Cell to) {
+
         if (state.getCurrentPhase() != Phase.RUNNING) {
             return false;
         }
 
         //TODO
-        getState().increaseMoveCounter();
-        notifyListeners();
+		//wenn diskCount > 30
+			//if to is within middle 4 cells && the cell is empty
+				//execute move
+				//return true
+			//sonst
+				//return false
 
-        return true;
+		//sonst
+			//if state.getField().get(to).isEmpty (1.)
+				//if isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn+1, to.getRow)).get().isOppositeColor 
+				//oder isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn-1, to.getRow)).get().isOppositeColor
+				//oder isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn, to.getRow+1)).isOppositeColor
+				//oder isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn, to.getRow-1)).isOppositeColor (2.)
+					//sets definieren;
+					//if (check3Vertical || check3Horizontal || check3Diagonal)(3.)
+							
+						//we have multiple sets of cells in different directions, cutSetAt(currentPlayer) for all of these sets, then add sets together to new set, this is the set of disks that have to get flipped
+							//flip these disks
+						
+
+						//getState().increaseMoveCounter();
+						//notifyListeners();
+
+						//return true; 
     }
 
     @Override
@@ -116,6 +137,124 @@ public class Reversi implements Model {
         state = stateHistory.pop();
         notifyListeners();
     }
+
+	private void flipDisks(Set set){
+		//for Cell cell in set
+			//state.getField().get(cell).set with new disks of opponent
+	}
+
+
+	private Set<Cell> cutSetAt(Player player, Set set){
+		//newset = new Set
+		
+		//for Cell cell in set
+			//if(cell.isPresent && isOwnColor)
+				//break;
+			//else
+				//add cell to newset
+		//return newset
+	}
+
+	private boolean check3Vertical(Cell to){
+		
+		//for Cell cell in diskOnStraightLineVertical
+			//if(cell.isPresent && isOwnColor)
+				//break;
+			//if(cell.isEmpty)
+				//return false
+		//return true
+	}
+
+	private boolean check3Horizontal(Cell to){
+		//for Cell cell in diskOnStraightLineHorizontal
+			//if(cell.isPresent && isOwnColor)
+				//break;
+			//if(cell.isEmpty)
+				//return false
+		//return true
+	}
+
+	private boolean check3Diagonal(Cell to){
+		//for Cell cell in diskOnStraightLineDiagonal
+			//if(cell.isPresent && isOwnColor)
+				//break;
+			//if(cell.isEmpty)
+				//return false
+		//return true
+	}
+
+
+	private void flipDisks(){
+		
+	}
+
+	private Set<Cell> diskOnStraightLineDiagonal(Cell to){
+		//TODO: split each case into own method
+		
+		//if opposite disk is on immediate upper right cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getRow bis 8
+				state.getField().get(new Cell(to.getColumn + i, to.getRow + i)).add cell to set
+
+			return set;*/
+		
+		//if opposite disk is on immediate upper left cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getRow bis 0
+				state.getField().get(new Cell(to.getColumn - i, to.getRow + i).add cell to set
+
+			return set;*/
+
+		//if opposite disk is on immediate lower right cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getRow bis 8
+				state.getField().get(new Cell(to.getColumn + i, to.getRow - i)).add cell to set
+					
+
+			return set;*/
+		
+		//if opposite disk is on immediate lower left cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getRow bis 0
+				state.getField().get(new Cell(to.getColumn - i, to.getRow - i)).add cell to set
+
+			return set;*/
+	}
+
+	private Set<Cell> diskOnStraightLineVertical(Cell to){
+		
+		//if opposite disk is on immediate upper cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getRow bis 8
+				state.getField().get(new Cell(to.getColumn, i)).add cell to set
+					
+
+			return set;*/
+		
+		//if opposite disk is on immediate lower cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getRow bis 0
+				state.getField().get(new Cell(to.getColumn, i)).add cell to set
+
+			return set;*/
+	}
+
+	private Set<Cell> diskOnStraightLineHorizontal(Cell to){
+		//if opposite disk is on immediate right cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getColumn bis 8
+				state.getField().get(new Cell(i, to.getRow)).add cell to set
+
+			return set;*/
+		
+		//if opposite disk is on immediate left cell of to
+			//HashSet set = new HashSet<>()
+			/*for i oppositeDisk.getColumn bis 0
+				istate.getField().get(new Cell(i, to.getRow)).add cell to set
+
+			return set;*/
+	}
+
 
     /**
      * Ends the game by setting its current phase to {@link Phase#FINISHED}. The winner is also set
