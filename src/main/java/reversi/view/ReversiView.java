@@ -27,13 +27,15 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   private JButton reset;
   private static final Color BACKGROUND_COLOR = new Color(0, 153, 0);
   private static final Color FONT_COLOR = new Color(240, 240, 240);
+  private static final int FONTSIZE_HEADLINE = 50;
+  private static final int FONTSIZE_INFO_LABEL = 20;
 
   private Controller controller;
 
   /**
    * Creates a view where all elements are set up to play a reversi game.
    *
-   * @param controller
+   * @param controller Validates and forwards any user input.
    */
   ReversiView(Controller controller) {
     this.controller = controller;
@@ -44,9 +46,6 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   }
 
   private void createDesign() {
-    int fontsize_headline = 40;
-    int fontsize_infoLabel = 18;
-
     drawboard.setBounds(0, 0, 600, 600);
 
     setLayout(null);
@@ -56,14 +55,14 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     headline = new JLabel();
     headline.setForeground(FONT_COLOR);
     headline.setText("Reversi");
-    headline.setFont(new Font("Comic Sans MS", Font.BOLD, fontsize_headline));
-    headline.setBounds(215, -70, 200, 200);
+    headline.setFont(new Font("Serif", Font.BOLD, FONTSIZE_HEADLINE));
+    headline.setBounds(215, -70, 300, 200);
 
     infoLabel = new JLabel();
     infoLabel.setForeground(FONT_COLOR);
     // For test purpose only.
     infoLabel.setText("Current Player: White");
-    infoLabel.setFont(new Font("Comic Sans MS", Font.BOLD, fontsize_infoLabel));
+    infoLabel.setFont(new Font("Serif", Font.BOLD, FONTSIZE_INFO_LABEL));
     infoLabel.setBounds(190, -20, 300, 200);
 
     quit = new JButton("Quit");
@@ -118,13 +117,13 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     }
   }
 
-  private void updateCurrentPlayerInfo() {
+  /* private void updateCurrentPlayerInfo() {
     setInfoLabelText("Current Player: ");
   }
 
   private void setInfoLabelText(String message) {
     infoLabel.setText(message);
-  }
+  }*/
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {

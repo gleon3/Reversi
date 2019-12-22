@@ -2,18 +2,17 @@ package reversi.view;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 /** Implementation of a controller class that handles and validates the user input. */
 public class ReversiController implements Controller, MouseListener {
 
   private View view;
-  private static final int DIFFERENCE_X = 97;
-  private static final int DIFFERENCE_Y = 101;
-  private static final int FIELD_SIZE = 50;
-  private int mouseY;
-  private int mouseX;
-  ArrayList<Integer> possibleMoves;
+  // private static final int DIFFERENCE_X = 97;
+  // private static final int DIFFERENCE_Y = 101;
+  // private static final int FIELD_SIZE = 50;
+  // private int mouseY;
+  // private int mouseX;
+  // ArrayList<Integer> possibleMoves;
   // private Model model
 
   public ReversiController() {
@@ -75,10 +74,10 @@ public class ReversiController implements Controller, MouseListener {
   @Override
   public void mouseClicked(MouseEvent e) {
     // Calculate the coordinates on the reversi board.
-    if ((e.getX() - DIFFERENCE_X) > 0 && (e.getY() - DIFFERENCE_Y) > 0) {
+    /* if ((e.getX() - DIFFERENCE_X) > 0 && (e.getY() - DIFFERENCE_Y) > 0) {
       mouseX = ((e.getX() - DIFFERENCE_X) / FIELD_SIZE);
       mouseY = ((e.getY() - DIFFERENCE_Y) / FIELD_SIZE);
-    }
+    }*/
     // TODO
   }
 

@@ -24,11 +24,13 @@ public class StartView extends JPanel {
   private JButton networkButton;
   private static final Color BACKGROUND_COLOR = new Color(0, 153, 0);
   private static final Color FONT_COLOR = new Color(240, 240, 240);
+  private static final int FONTSIZE_HEADLINE = 50;
+  private static final int FONTSIZE_MENU = 20;
 
   /**
    * Creates a view where all necessary elements are set up to navigate through the game.
    *
-   * @param controller
+   * @param controller Validates and forwards any user input.
    */
   StartView(Controller controller) {
     this.controller = Objects.requireNonNull(controller);
@@ -37,26 +39,24 @@ public class StartView extends JPanel {
   }
 
   private void createDesign() {
-    int fontsize_headline = 50;
-    int fontsize_menu = 20;
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
     setPreferredSize(new Dimension(600, 600));
     headline = new JLabel();
     headline.setForeground(FONT_COLOR);
     headline.setText("Reversi");
-    headline.setFont(new Font("Comic Sans MS", Font.BOLD, fontsize_headline));
-    headline.setBounds(200, -50, 200, 200);
+    headline.setFont(new Font("Serif", Font.BOLD, FONTSIZE_HEADLINE));
+    headline.setBounds(200, -50, 300, 200);
 
     menu = new JLabel();
     menu.setForeground(FONT_COLOR);
     menu.setText("Main menu");
-    menu.setFont(new Font("Comic Sans MS", Font.BOLD, fontsize_menu));
+    menu.setFont(new Font("Serif", Font.BOLD, FONTSIZE_MENU));
     menu.setBounds(230, 20, 200, 200);
 
     hotseatGameButton = new JButton("Hotseat");
     hotseatGameButton.setToolTipText("Starts an hotseat game");
-    hotseatGameButton.setBounds(250, 200, 50, 25);
+    hotseatGameButton.setBounds(240, 200, 60, 25);
     setUpButton(hotseatGameButton);
 
     singleplayerButton = new JButton("Singleplayer");

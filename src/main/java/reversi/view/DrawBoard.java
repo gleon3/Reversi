@@ -31,16 +31,15 @@ public class DrawBoard extends JPanel {
   private static final Color BOARD_FRAME = Color.BLACK;
   private static final int NUMBER_OF_ROWS = 8;
   private static final int NUMBER_OF_COLUMNS = 8;
-  private Controller controller;
+  // private Controller controller;
 
   /**
    * Initialize a new drawBoard.
    *
-   * @param model reversi model which contains the game logic.
    * @param controller Controller which handles the validation of the user input.
    */
   public DrawBoard(Controller controller) {
-    this.controller = controller;
+    // this.controller = controller;
   }
 
   @Override

@@ -24,11 +24,12 @@ public class LobbyView extends JPanel {
   private JButton quit;
   private static final Color BACKGROUND_COLOR = new Color(0, 153, 0);
   private static final Color FONT_COLOR = new Color(240, 240, 240);
+  private static final int FONTSIZE = 40;
 
   /**
    * Creates a view where all elements are set up to handle network gaming.
    *
-   * @param controller
+   * @param controller Validates and forwards any user input.
    */
   public LobbyView(Controller controller) {
     this.controller = controller;
@@ -37,15 +38,14 @@ public class LobbyView extends JPanel {
   }
 
   private void createDesign() {
-    int fontsize = 50;
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
     setPreferredSize(new Dimension(600, 600));
     headline = new JLabel();
     headline.setForeground(FONT_COLOR);
     headline.setText("Game Lobby");
-    headline.setFont(new Font("Comic Sans MS", Font.BOLD, fontsize));
-    headline.setBounds(140, -100, 300, 300);
+    headline.setFont(new Font("Serif", Font.BOLD, FONTSIZE));
+    headline.setBounds(140, -100, 400, 300);
 
     quit = new JButton("Quit");
     quit.setToolTipText("Quit the game");
