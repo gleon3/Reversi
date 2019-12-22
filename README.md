@@ -1,19 +1,20 @@
-# Sample project
+# Reversi game project
 
-This project consists of a simple gradle config and some example source files
-done for the SEP WS19/20 at LMU Munich.
+This project consists of a early version of a reversi game and a simple gradle config for the SEP WS19/20 at LMU Munich.
 
 ## Dependencies
 
 The project requires Java 11.
-It was only tested on Ubuntu 18.04 with openjdk 11.0.3 2019-04-16,
-so no other guarantees can be made.
+It was tested on Windows 10 version 1903 and Linux Mint 19.2 Cinnamon.
 
 The project is built with `gradle`, version 5.6.4. The provided `gradlew` wrapper automatically downloads and uses
 the correct gradle version.
 
+## Opening the Project
 
-## Building the Project
+The Project's jar file can be opened with `java -jar releases/Zwischenabgabe1.jar`
+
+## Building the Project 
 
 On Linux and Mac OS, run the following command from the project's root directory to compile the program,
 run all checks and create an executable jar:
@@ -29,8 +30,8 @@ run all checks and create an executable jar:
 ./gradlew.bat build jar
 ```
 
-If the command succeeds, the jar is found in `build/libs/sample.jar`.
-This jar can be executed with `java -jar build/libs/sample.jar`
+If the command succeeds, the jar is found in `build/libs/Zwischenabgabe1.jar`.
+This jar can be executed with `java -jar build/libs/Zwischenabgabe1.jar`
 
 
 ## Running the Program
