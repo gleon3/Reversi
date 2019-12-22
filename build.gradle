@@ -15,14 +15,14 @@ dependencies {
 }
 
 application {
-    mainClassName = 'Reversi.Shell'
+    mainClassName = 'de.lmu.ifi.sosylab.HelloWorld'
 }
 
 jar {
   manifest {
     attributes(
       'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-      'Main-Class': 'Reversi.Shell'
+      'Main-Class': 'de.lmu.ifi.sosylab.HelloWorld'
     )
   }
 }
