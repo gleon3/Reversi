@@ -10,8 +10,11 @@ It was tested on Windows 10 version 1903 and Linux Mint 19.2 Cinnamon.
 The project is built with `gradle`, version 5.6.4. The provided `gradlew` wrapper automatically downloads and uses
 the correct gradle version.
 
+## Opening the Project
 
-## Building the Project
+The Project's jar file can be opened with `java -jar releases/Zwischenabgabe1.jar`
+
+## Building the Project 
 
 On Linux and Mac OS, run the following command from the project's root directory to compile the program,
 run all checks and create an executable jar:
