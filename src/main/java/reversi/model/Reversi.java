@@ -129,7 +129,8 @@ public class Reversi implements Model {
 						//getState().increaseMoveCounter();
 						//notifyListeners();
 
-						//return true; 
+						//return true;
+        return true;
     }
 
     @Override
@@ -138,21 +139,25 @@ public class Reversi implements Model {
         notifyListeners();
     }
 
-	private void flipDisks(Set set){
-		//for Cell cell in set
-			//state.getField().get(cell).set with new disks of opponent
+    //TODO: javadoc
+	private void flipDisks(Set<Cell> set){
+		for(Cell cell : set) {
+            state.getField().set(cell, new Disk(Player.getOpponentOf(state.getCurrentPlayer())));
+        }
 	}
 
+    //TODO: javadoc
+	private Set<Cell> cutSetAt(Player player, Set<Cell> set){
+		Set newSet = new HashSet<Cell>();
 
-	private Set<Cell> cutSetAt(Player player, Set set){
-		//newset = new Set
-		
-		//for Cell cell in set
-			//if(cell.isPresent && isOwnColor)
-				//break;
-			//else
-				//add cell to newset
-		//return newset
+		for(Cell cell : set) {
+            if(state.getField().get(cell).isPresent() && state.getField().get(cell).get().getPlayer().equals(player)) {
+                break;
+            }else {
+                newSet.add(cell);
+            }
+        }
+		return newSet;
 	}
 
 	private boolean check3Vertical(Cell to){
@@ -163,6 +168,7 @@ public class Reversi implements Model {
 			//if(cell.isEmpty)
 				//return false
 		//return true
+        return true;
 	}
 
 	private boolean check3Horizontal(Cell to){
@@ -172,6 +178,7 @@ public class Reversi implements Model {
 			//if(cell.isEmpty)
 				//return false
 		//return true
+        return true;
 	}
 
 	private boolean check3Diagonal(Cell to){
@@ -181,15 +188,12 @@ public class Reversi implements Model {
 			//if(cell.isEmpty)
 				//return false
 		//return true
-	}
-
-
-	private void flipDisks(){
-		
+        return true;
 	}
 
 	private Set<Cell> diskOnStraightLineDiagonal(Cell to){
-		//TODO: split each case into own method
+        return new HashSet<>();
+        //TODO: split each case into own method
 		
 		//if opposite disk is on immediate upper right cell of to
 			//HashSet set = new HashSet<>()
@@ -221,38 +225,62 @@ public class Reversi implements Model {
 			return set;*/
 	}
 
-	private Set<Cell> diskOnStraightLineVertical(Cell to){
-		
-		//if opposite disk is on immediate upper cell of to
-			//HashSet set = new HashSet<>()
-			/*for i oppositeDisk.getRow bis 8
-				state.getField().get(new Cell(to.getColumn, i)).add cell to set
-					
+	private Set<Cell> disksVertical(Cell to){
+        Set disksVertical = new HashSet<Set<Set<Cell>>>();
 
-			return set;*/
-		
-		//if opposite disk is on immediate lower cell of to
-			//HashSet set = new HashSet<>()
-			/*for i oppositeDisk.getRow bis 0
-				state.getField().get(new Cell(to.getColumn, i)).add cell to set
+        Optional<Disk> pawnForward = state.getField().get(new Cell(to.getColumn(), to.getRow()+1));
+        Optional<Disk> pawnBehind = state.getField().get(new Cell(to.getColumn(), to.getRow()-1));
 
-			return set;*/
+        if(pawnForward.isPresent() && pawnForward.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))){
+            Set disksForward = new HashSet<Cell>();
+
+            for(int i = to.getRow() + 1; i < GameField.SIZE - 1; i++){
+                disksForward.add(state.getField().get(new Cell(i, to.getRow())));
+            }
+
+            disksVertical.add(disksForward);
+        }
+
+        if(pawnBehind.isPresent() && pawnBehind.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))){
+            Set disksVerticalBehind = new HashSet<Cell>();
+
+            for(int i = to.getRow() - 1; i > 0; i--){
+                disksVerticalBehind.add(state.getField().get(new Cell(i, to.getRow())));
+            }
+
+            disksVertical.add(disksVerticalBehind);
+        }
+
+        return disksVertical;
 	}
 
-	private Set<Cell> diskOnStraightLineHorizontal(Cell to){
-		//if opposite disk is on immediate right cell of to
-			//HashSet set = new HashSet<>()
-			/*for i oppositeDisk.getColumn bis 8
-				state.getField().get(new Cell(i, to.getRow)).add cell to set
+	private Set<Set<Cell>> disksHorizontal(Cell to){
+        Set disksHorizontal = new HashSet<Set<Set<Cell>>>();
 
-			return set;*/
-		
-		//if opposite disk is on immediate left cell of to
-			//HashSet set = new HashSet<>()
-			/*for i oppositeDisk.getColumn bis 0
-				istate.getField().get(new Cell(i, to.getRow)).add cell to set
+        Optional<Disk> pawnRight = state.getField().get(new Cell(to.getColumn()+1, to.getRow()));
+        Optional<Disk> pawnLeft = state.getField().get(new Cell(to.getColumn()-1, to.getRow()));
 
-			return set;*/
+        if(pawnRight.isPresent() && pawnRight.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))){
+            Set disksRight = new HashSet<Cell>();
+
+            for(int i = to.getColumn() + 1; i < GameField.SIZE - 1; i++){
+                disksRight.add(state.getField().get(new Cell(i, to.getRow())));
+            }
+
+            disksHorizontal.add(disksRight);
+        }
+
+        if(pawnLeft.isPresent() && pawnLeft.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))){
+            Set disksLeft = new HashSet<Cell>();
+
+            for(int i = to.getColumn() - 1; i > 0; i--){
+                disksLeft.add(state.getField().get(new Cell(i, to.getRow())));
+            }
+
+            disksHorizontal.add(disksLeft);
+        }
+
+        return disksHorizontal;
 	}
 
 
