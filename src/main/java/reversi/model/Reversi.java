@@ -116,16 +116,20 @@ public class Reversi implements Model {
 
      else
        if state.getField().get(to).isEmpty (1.)
-           if isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn+1, to.getRow)).get().isOppositeColor
-           oder isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn-1,to.getRow)).get().isOppositeColor
-           oder isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn,to.getRow+1)).isOppositeColor
-           oder isWithinBound && isPresent && state.getField().get(new Cell(to.getColumn,to.getRow-1)).isOppositeColor (2.)
+           if isWithinBound && isPresent
+           && state.getField().get(new Cell(to.getColumn+1, to.getRow)).get().isOppositeColor
+           oder isWithinBound && isPresent
+           && state.getField().get(new Cell(to.getColumn-1,to.getRow)).get().isOppositeColor
+           oder isWithinBound && isPresent
+           && state.getField().get(new Cell(to.getColumn,to.getRow+1)).isOppositeColor
+           oder isWithinBounds && isPresent
+           && state.getField().get(new Cell(to.getColumn,to.getRow-1)).isOppositeColor (2.)
                sets definieren;
                if (checkStraightLine(sets))(3.)
 
-               we have multiple sets of cells in different directions, cutSetAt(currentPlayer) for all of
-               these sets, then add sets together to new set, this is the set of disks that have to get flipped
-               flip these disks
+               we have multiple sets of cells in different directions, cutSetAt(currentPlayer)
+               for all of these sets, then add sets together to new set, this is the set of
+               disks that have to get flipped -> flip these disks
 
                execute move
                getState().increaseMoveCounter();
@@ -183,12 +187,6 @@ public class Reversi implements Model {
 
     Optional<Disk> pawnUpperRight =
         state.getField().get(new Cell(to.getColumn() + 1, to.getRow() + 1));
-    Optional<Disk> pawnUpperLeft =
-        state.getField().get(new Cell(to.getColumn() - 1, to.getRow() + 1));
-    Optional<Disk> pawnLowerRight =
-        state.getField().get(new Cell(to.getColumn() + 1, to.getRow() - 1));
-    Optional<Disk> pawnLowerLeft =
-        state.getField().get(new Cell(to.getColumn() - 1, to.getRow() - 1));
 
     if (pawnUpperRight.isPresent()
         && pawnUpperRight
@@ -208,6 +206,9 @@ public class Reversi implements Model {
       disksDiagonal.add(disksUpperRight);
     }
 
+    Optional<Disk> pawnUpperLeft =
+        state.getField().get(new Cell(to.getColumn() - 1, to.getRow() + 1));
+
     if (pawnUpperLeft.isPresent()
         && pawnUpperLeft.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
       Set disksUpperLeft = new HashSet<Cell>();
@@ -222,6 +223,9 @@ public class Reversi implements Model {
 
       disksDiagonal.add(disksUpperLeft);
     }
+
+    Optional<Disk> pawnLowerRight =
+        state.getField().get(new Cell(to.getColumn() + 1, to.getRow() - 1));
 
     if (pawnLowerRight.isPresent()
         && pawnLowerRight
@@ -240,6 +244,9 @@ public class Reversi implements Model {
 
       disksDiagonal.add(disksLowerRight);
     }
+
+    Optional<Disk> pawnLowerLeft =
+        state.getField().get(new Cell(to.getColumn() - 1, to.getRow() - 1));
 
     if (pawnLowerLeft.isPresent()
         && pawnLowerLeft.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
