@@ -6,7 +6,9 @@ public enum Player {
   BLACK("Black");
 
   private final String playerName;
-  private int diskCount = 32;
+
+  static final int DISK_COUNT_START = 32;
+  private int diskCount = DISK_COUNT_START;
 
   /**
    * Creates a new <code>Player</code>-object that takes a string argument for the internal

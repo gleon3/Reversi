@@ -5,8 +5,10 @@ import static java.util.Objects.requireNonNull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,9 +18,6 @@ import java.util.Set;
  * user-interface to playing a game successfully.
  */
 public class Reversi implements Model {
-
-  private static final int DIRECTION_UPWARD = 1;
-  private static final int DIRECTION_DOWNWARD = -1;
 
   private static final int EXPECTED_HISTORY_LENGTH = 60;
 
@@ -104,39 +103,64 @@ public class Reversi implements Model {
       return false;
     }
 
-    // TODO
-    /* if diskCount of currentPlayer > 30
-        if to is within middle 4 cells && the cell is empty
-           execute move
-           getState().increaseMoveCounter();
-           notifyListeners();
-           return true;
-      else
-        return false
+    Player currentPlayer = state.getCurrentPlayer();
 
-     else
-       if state.getField().get(to).isEmpty (1.)
-           if isWithinBound && isPresent
-           && state.getField().get(new Cell(to.getColumn+1, to.getRow)).get().isOppositeColor
-           oder isWithinBound && isPresent
-           && state.getField().get(new Cell(to.getColumn-1,to.getRow)).get().isOppositeColor
-           oder isWithinBound && isPresent
-           && state.getField().get(new Cell(to.getColumn,to.getRow+1)).isOppositeColor
-           oder isWithinBounds && isPresent
-           && state.getField().get(new Cell(to.getColumn,to.getRow-1)).isOppositeColor (2.)
-               sets definieren;
-               if (checkStraightLine(sets))(3.)
+    if (!GameField.isWithinBounds(to)) {
+      return false;
+    }
 
-               we have multiple sets of cells in different directions, cutSetAt(currentPlayer)
-               for all of these sets, then add sets together to new set, this is the set of
-               disks that have to get flipped -> flip these disks
+    // get all possible moves for the current player
+    Set<Cell> possibleMoves = getPossibleMovesForPlayer(currentPlayer);
+    if (!possibleMoves.contains(to)) {
+      return false;
+    }
 
-               execute move
-               getState().increaseMoveCounter();
-               notifyListeners();
-               return true;
-    */
+    // clone the state and record it
+    stateHistory.push(state.makeCopy());
+
+    state.getField().set(to, new Disk(currentPlayer));
+    flipDisks(to, currentPlayer);
+
+    Player nextPlayer = Player.getOpponentOf(currentPlayer);
+    if (!checkForWinningCondition()) {
+      state.setCurrentPlayer(nextPlayer);
+    }
+
+    getState().increaseMoveCounter();
+    currentPlayer.setDiskCount(currentPlayer.getDiskCount() - 1);
+    notifyListeners();
+
     return true;
+  }
+
+  /**
+   * Checks whether a winning condition is fulfilled. In that case, the {@link Phase phase} and the
+   * {@link Player winning player} are set appropriately.
+   *
+   * @return <code>true</code> if the game is over, <code>false</code> otherwise
+   */
+  private boolean checkForWinningCondition() {
+    if (state.getCurrentPhase() != Phase.RUNNING) {
+      return true;
+    }
+
+    if (!canExecuteMove(Player.BLACK) || !canExecuteMove(Player.WHITE)) {
+      // one of the players is not able to make a move anymore, so the game is over and the player
+      // with more disks wins the game.
+      Set<Cell> blackDisks = state.getAllCellsOfPlayer(Player.BLACK);
+      Set<Cell> whiteDisks = state.getAllCellsOfPlayer(Player.WHITE);
+
+      if (whiteDisks.size() > blackDisks.size()) {
+        setGameFinished(Optional.of(Player.WHITE));
+      } else if (blackDisks.size() > whiteDisks.size()) {
+        setGameFinished(Optional.of(Player.BLACK));
+      } else {
+        setGameFinished(Optional.empty());
+      }
+      return true;
+    }
+
+    return false;
   }
 
   @Override
@@ -146,186 +170,184 @@ public class Reversi implements Model {
   }
 
   // TODO: javadoc
-  private void flipDisks(Set<Cell> set) {
-    for (Cell cell : set) {
-      state.getField().set(cell, new Disk(Player.getOpponentOf(state.getCurrentPlayer())));
+  private void flipDisks(Cell cell, Player player) {
+    Set<List<Cell>> straightLineDisks = disksHorizontal(cell);
+    straightLineDisks.addAll(disksHorizontal(cell));
+    straightLineDisks.addAll(disksVertical(cell));
+    straightLineDisks.addAll(disksDiagonal(cell));
+
+    List<Cell> disksToFlip = new ArrayList<>();
+
+    for (List<Cell> list : straightLineDisks) {
+      if (!list.isEmpty() && checkStraightLineInterrupted(list, player)) {
+        disksToFlip.addAll(cutListAt(player, list));
+      }
+    }
+
+    for (Cell c : disksToFlip) {
+      state.getField().set(c, new Disk(player));
     }
   }
 
   // TODO: javadoc
-  private Set<Cell> cutSetAt(Player player, Set<Cell> set) {
-    Set newSet = new HashSet<Cell>();
+  private List<Cell> cutListAt(Player player, List<Cell> list) {
+    List<Cell> newList = new ArrayList<>();
 
-    for (Cell cell : set) {
+    for (Cell cell : list) {
       if (state.getField().get(cell).isPresent()
           && state.getField().get(cell).get().getPlayer().equals(player)) {
         break;
       } else {
-        newSet.add(cell);
+        newList.add(cell);
       }
     }
-    return newSet;
+    return newList;
   }
 
   // TODO: javadoc
-  private boolean checkStraightLineUninterrupted(Set<Cell> set) {
-    for (Cell cell : set) {
+  private boolean checkStraightLineInterrupted(List<Cell> list, Player player) {
+
+    if (state.getField().get(list.get(0)).isEmpty()
+        || state.getField().get(list.get(0)).get().getPlayer().equals(player)) {
+      return false;
+    }
+
+    for (Cell cell : list) {
       if (state.getField().get(cell).isEmpty()) {
         return false;
       } else {
-        if (state.getField().get(cell).get().getPlayer().equals(state.getCurrentPlayer())) {
-          break;
+        if (state.getField().get(cell).get().getPlayer().equals(player)) {
+          return true;
         }
       }
     }
-    return true;
+    return false;
   }
 
   // TODO: javadoc
-  private Set<Cell> disksDiagonal(Cell to) {
-    Set disksDiagonal = new HashSet<Set<Set<Cell>>>();
+  private Set<List<Cell>> disksDiagonal(Cell to) {
+    List<Cell> disksUpperRight = new ArrayList<>();
 
-    Optional<Disk> pawnUpperRight =
-        state.getField().get(new Cell(to.getColumn() + 1, to.getRow() + 1));
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn() + i, to.getRow() + i);
 
-    if (pawnUpperRight.isPresent()
-        && pawnUpperRight
-            .get()
-            .getPlayer()
-            .equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksUpperRight = new HashSet<Cell>();
-
-      Cell upperRight = new Cell(to.getColumn() + 1, to.getRow() + 1);
-
-      int upperRightStart = Math.max(upperRight.getColumn(), upperRight.getRow());
-
-      for (int i = upperRightStart; i < GameField.SIZE; i++) {
-        disksUpperRight.add(state.getField().get(new Cell(to.getColumn() + i, to.getRow() + i)));
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksDiagonal.add(disksUpperRight);
+      disksUpperRight.add(cell);
     }
 
-    Optional<Disk> pawnUpperLeft =
-        state.getField().get(new Cell(to.getColumn() - 1, to.getRow() + 1));
+    List<Cell> disksUpperLeft = new ArrayList<>();
 
-    if (pawnUpperLeft.isPresent()
-        && pawnUpperLeft.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksUpperLeft = new HashSet<Cell>();
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn() - i, to.getRow() + i);
 
-      for (int i = 0; i < GameField.SIZE - 1; i++) {
-        disksUpperLeft.add(state.getField().get(new Cell(to.getColumn() - i, to.getRow() + i)));
-
-        if ((to.getColumn() - i) <= 0 || (to.getRow() + i) >= GameField.SIZE - 1) {
-          break;
-        }
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksDiagonal.add(disksUpperLeft);
+      disksUpperLeft.add(cell);
     }
 
-    Optional<Disk> pawnLowerRight =
-        state.getField().get(new Cell(to.getColumn() + 1, to.getRow() - 1));
+    List<Cell> disksLowerRight = new ArrayList<>();
 
-    if (pawnLowerRight.isPresent()
-        && pawnLowerRight
-            .get()
-            .getPlayer()
-            .equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksLowerRight = new HashSet<Cell>();
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn() + i, to.getRow() - i);
 
-      for (int i = 0; i < GameField.SIZE - 1; i++) {
-        disksLowerRight.add(state.getField().get(new Cell(to.getColumn() + i, to.getRow() - i)));
-
-        if ((to.getColumn() + i) >= GameField.SIZE || (to.getRow() - i) <= 0) {
-          break;
-        }
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksDiagonal.add(disksLowerRight);
+      disksLowerRight.add(cell);
     }
 
-    Optional<Disk> pawnLowerLeft =
-        state.getField().get(new Cell(to.getColumn() - 1, to.getRow() - 1));
+    List<Cell> disksLowerLeft = new ArrayList<>();
 
-    if (pawnLowerLeft.isPresent()
-        && pawnLowerLeft.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksLowerLeft = new HashSet<Cell>();
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn() - i, to.getRow() - i);
 
-      Cell lowerLeft = new Cell(to.getColumn() - 1, to.getRow() - 1);
-
-      int lowerLeftStart = Math.min(lowerLeft.getColumn(), lowerLeft.getRow());
-
-      for (int i = lowerLeftStart; i >= 0; i--) {
-        disksLowerLeft.add(state.getField().get(new Cell(to.getColumn() - i, to.getRow() - i)));
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksDiagonal.add(disksLowerLeft);
+      disksLowerLeft.add(cell);
     }
+
+    Set<List<Cell>> disksDiagonal = new HashSet<>();
+
+    disksDiagonal.add(disksUpperRight);
+    disksDiagonal.add(disksUpperLeft);
+    disksDiagonal.add(disksLowerRight);
+    disksDiagonal.add(disksLowerLeft);
 
     return disksDiagonal;
   }
 
   // TODO: javadoc
-  private Set<Cell> disksVertical(Cell to) {
-    Set disksVertical = new HashSet<Set<Set<Cell>>>();
+  private Set<List<Cell>> disksVertical(Cell to) {
+    Set<List<Cell>> disksVertical = new HashSet<>();
 
-    Optional<Disk> pawnForward = state.getField().get(new Cell(to.getColumn(), to.getRow() + 1));
-    Optional<Disk> pawnBehind = state.getField().get(new Cell(to.getColumn(), to.getRow() - 1));
+    List<Cell> disksForward = new ArrayList<>();
 
-    if (pawnForward.isPresent()
-        && pawnForward.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksForward = new HashSet<Cell>();
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn(), to.getRow() + i);
 
-      for (int i = to.getRow() + 1; i < GameField.SIZE - 1; i++) {
-        disksForward.add(state.getField().get(new Cell(i, to.getRow())));
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksVertical.add(disksForward);
+      disksForward.add(cell);
     }
 
-    if (pawnBehind.isPresent()
-        && pawnBehind.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksVerticalBehind = new HashSet<Cell>();
+    List<Cell> disksBehind = new ArrayList<>();
 
-      for (int i = to.getRow() - 1; i >= 0; i--) {
-        disksVerticalBehind.add(state.getField().get(new Cell(i, to.getRow())));
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn(), to.getRow() - i);
+
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksVertical.add(disksVerticalBehind);
+      disksBehind.add(cell);
     }
+
+    disksVertical.add(disksForward);
+    disksVertical.add(disksBehind);
 
     return disksVertical;
   }
 
   // TODO: javadoc
-  private Set<Set<Cell>> disksHorizontal(Cell to) {
-    Set disksHorizontal = new HashSet<Set<Set<Cell>>>();
+  private Set<List<Cell>> disksHorizontal(Cell to) {
+    Set<List<Cell>> disksHorizontal = new HashSet<>();
 
-    Optional<Disk> pawnRight = state.getField().get(new Cell(to.getColumn() + 1, to.getRow()));
-    Optional<Disk> pawnLeft = state.getField().get(new Cell(to.getColumn() - 1, to.getRow()));
+    List<Cell> disksRight = new ArrayList<>();
 
-    if (pawnRight.isPresent()
-        && pawnRight.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksRight = new HashSet<Cell>();
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn() + i, to.getRow());
 
-      for (int i = to.getColumn() + 1; i < GameField.SIZE - 1; i++) {
-        disksRight.add(state.getField().get(new Cell(i, to.getRow())));
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksHorizontal.add(disksRight);
+      disksRight.add(cell);
     }
 
-    if (pawnLeft.isPresent()
-        && pawnLeft.get().getPlayer().equals(Player.getOpponentOf(state.getCurrentPlayer()))) {
-      Set disksLeft = new HashSet<Cell>();
+    List<Cell> disksLeft = new ArrayList<>();
 
-      for (int i = to.getColumn() - 1; i >= 0; i--) {
-        disksLeft.add(state.getField().get(new Cell(i, to.getRow())));
+    for (int i = 1; i < GameField.SIZE; i++) {
+      Cell cell = new Cell(to.getColumn() - i, to.getRow());
+
+      if (!GameField.isWithinBounds(cell)) {
+        break;
       }
 
-      disksHorizontal.add(disksLeft);
+      disksLeft.add(cell);
     }
+
+    disksHorizontal.add(disksRight);
+    disksHorizontal.add(disksLeft);
 
     return disksHorizontal;
   }
@@ -353,19 +375,141 @@ public class Reversi implements Model {
    * @return <code>true</code> if player is able to move, <code>false</code> otherwise.
    */
   private boolean canExecuteMove(Player player) {
-    Set<Cell> cells = state.getAllCellsOfPlayer(player);
-    for (Cell cell : cells) {
-      Set<Cell> possibleMoves = getPossibleMovesForPlayer(player);
-      if (!possibleMoves.isEmpty()) {
-        return true;
-      }
-    }
-    return false;
+    Set<Cell> possibleMoves = getPossibleMovesForPlayer(player);
+    return !possibleMoves.isEmpty();
   }
 
   @Override
   public synchronized Set<Cell> getPossibleMovesForPlayer(Player player) {
     // TODO
-    return new HashSet<>();
+    if (player != Player.WHITE && player != Player.BLACK) {
+      throw new IllegalArgumentException("Unhandled player: " + player);
+    }
+
+    Set<Cell> possibleMoves = new HashSet<>();
+
+    if (player.getDiskCount() <= 0) {
+      return possibleMoves;
+    }
+
+    Set<Cell> cells;
+
+    boolean firstFourMoves = false;
+
+    if (player.getDiskCount() > Player.DISK_COUNT_START - 2) {
+      // cells = middle 4 cells empty
+      cells = state.getField().getMiddleFourEmptyCells();
+      firstFourMoves = true;
+    } else {
+      cells = state.getField().getEmptyCells();
+      // cells = empty
+    }
+
+    // für jede cell in cells
+    for (Cell cell : cells) {
+      if (firstFourMoves) {
+        possibleMoves.add(cell);
+      } else {
+        boolean hasAdjacentOppositeDisk = false;
+        boolean pathInterrupted = false;
+
+        // 2.
+        Cell forward = new Cell(cell.getColumn(), cell.getRow() + 1);
+        Cell backward = new Cell(cell.getColumn(), cell.getRow() - 1);
+        Cell right = new Cell(cell.getColumn() + 1, cell.getRow());
+        Cell left = new Cell(cell.getColumn() - 1, cell.getRow());
+        Cell diagonallyForwardRight = new Cell(cell.getColumn() + 1, cell.getRow() + 1);
+        Cell diagonallyForwardLeft = new Cell(cell.getColumn() - 1, cell.getRow() + 1);
+        Cell diagonallyBackwardRight = new Cell(cell.getColumn() + 1, cell.getRow() - 1);
+        Cell diagonallyBackwardLeft = new Cell(cell.getColumn() - 1, cell.getRow() - 1);
+
+        if ((GameField.isWithinBounds(forward)
+                && state.getField().get(forward).isPresent()
+                && state
+                    .getField()
+                    .get(forward)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(backward)
+                && state.getField().get(backward).isPresent()
+                && state
+                    .getField()
+                    .get(backward)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(right)
+                && state.getField().get(right).isPresent()
+                && state
+                    .getField()
+                    .get(right)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(left)
+                && state.getField().get(left).isPresent()
+                && state
+                    .getField()
+                    .get(left)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(diagonallyForwardRight)
+                && state.getField().get(diagonallyForwardRight).isPresent()
+                && state
+                    .getField()
+                    .get(diagonallyForwardRight)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(diagonallyForwardLeft)
+                && state.getField().get(diagonallyForwardLeft).isPresent()
+                && state
+                    .getField()
+                    .get(diagonallyForwardLeft)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(diagonallyBackwardRight)
+                && state.getField().get(diagonallyBackwardRight).isPresent()
+                && state
+                    .getField()
+                    .get(diagonallyBackwardRight)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))
+            || (GameField.isWithinBounds(diagonallyBackwardLeft)
+                && state.getField().get(diagonallyBackwardLeft).isPresent()
+                && state
+                    .getField()
+                    .get(diagonallyBackwardLeft)
+                    .get()
+                    .getPlayer()
+                    .equals(Player.getOpponentOf(player)))) {
+          // ... for backward, right, left, ...
+          // 2. is true
+          hasAdjacentOppositeDisk = true;
+        }
+
+        Set<List<Cell>> straightLineDisks = disksHorizontal(cell);
+        straightLineDisks.addAll(disksHorizontal(cell));
+        straightLineDisks.addAll(disksVertical(cell));
+        straightLineDisks.addAll(disksDiagonal(cell));
+
+        for (List<Cell> list : straightLineDisks) {
+          if (!list.isEmpty() && checkStraightLineInterrupted(list, player)) {
+            pathInterrupted = true;
+            break;
+          }
+        }
+
+        if (hasAdjacentOppositeDisk && pathInterrupted) {
+          possibleMoves.add(cell);
+        }
+      }
+    }
+
+    return possibleMoves;
   }
 }

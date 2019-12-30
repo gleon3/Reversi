@@ -1,9 +1,11 @@
 package reversi.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A class whose sole responsibility is the management of disks on the reversi board. As such it
@@ -62,6 +64,36 @@ public class GameField {
     }
 
     return map;
+  }
+
+  // TODO: javadoc
+  Set<Cell> getEmptyCells() {
+    Set<Cell> set = new HashSet<>();
+
+    for (int column = 0; column < SIZE; column++) {
+      for (int row = 0; row < SIZE; row++) {
+        if (field[column][row] == null) {
+          set.add(new Cell(column, row));
+        }
+      }
+    }
+
+    return set;
+  }
+
+  // TODO: javadoc
+  Set<Cell> getMiddleFourEmptyCells() {
+    Set<Cell> set = new HashSet<>();
+
+    for (int column = 3; column < 5; column++) {
+      for (int row = 3; row < 5; row++) {
+        if (field[column][row] == null) {
+          set.add(new Cell(column, row));
+        }
+      }
+    }
+
+    return set;
   }
 
   /**
