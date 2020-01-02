@@ -3,9 +3,9 @@ package reversi.model;
 import reversi.model.ai.MinimaxAlgorithm;
 
 /**
- * Extension of a {@link Reversi}-class, in which a human player plays against an ai-player. The logic
- * used for computing the moves of the ai-player is done by an implementation of a {@link
- * MinimaxAlgorithm minimax}-algorithm.
+ * Extension of a {@link Reversi}-class, in which a human player plays against an ai-player.
+ * The logic used for computing the moves of the ai-player is done by an implementation
+ * of a {@link MinimaxAlgorithm minimax}-algorithm.
  *
  * @see Reversi
  */

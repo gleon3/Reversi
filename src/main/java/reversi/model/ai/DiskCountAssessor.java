@@ -6,11 +6,12 @@ import reversi.model.GameState;
 import reversi.model.Player;
 
 /**
- * Assessment class that rates the {@link GameState} by evaluating the number of disks on the GameField.
+ * Assessment class that rates the {@link GameState} by evaluating
+ * the number of disks on the GameField.
  *
  * <p>The best possible score can be achieved by {@link Player#WHITE} having
- * as much disks as possible on the field, while at the same time {@link Player#BLACK} is having as
- * few disks as possible.
+ * as much disks as possible on the field, while at the same time {@link Player#BLACK}
+ * is having as few disks as possible.
  */
 public class DiskCountAssessor implements StateAssessor {
 

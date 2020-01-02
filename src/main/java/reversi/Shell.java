@@ -5,8 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import reversi.model.AiReversi;
+import reversi.model.Cell;
+import reversi.model.Disk;
+import reversi.model.GameField;
+import reversi.model.GameState;
+import reversi.model.Model;
+import reversi.model.Phase;
+import reversi.model.Player;
+import reversi.model.Reversi;
 
-import reversi.model.*;
 
 /** This class provides a shell to play reversi. Includes a main method to run the shell. */
 public class Shell {

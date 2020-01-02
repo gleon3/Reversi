@@ -1,10 +1,9 @@
 package reversi.model.ai;
 
+import java.util.Set;
 import reversi.model.Cell;
 import reversi.model.GameState;
 import reversi.model.Player;
-
-import java.util.Set;
 
 /**
  * Assessment class that rates the {@link GameState} by calculating static position values regarding
