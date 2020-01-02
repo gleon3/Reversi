@@ -25,8 +25,12 @@ public class GameState {
    * Constructs a new <code>GameState</code>. The state begins in a clear state, which means that
    * 1.) no disks are on the board initially, 2.) player black is set as the beginning player, and
    * 3.) the game has its {@link Phase} set to a running state.
+   *
+   * @param field the field to start the <code>GameState</code> with.
    */
   GameState(GameField field) {
+    Player.BLACK.setDiskCount(Player.DISK_COUNT_START);
+    Player.WHITE.setDiskCount(Player.DISK_COUNT_START);
     currentPhase = Phase.RUNNING;
     currentPlayer = Player.BLACK;
     gameField = field;
@@ -34,6 +38,11 @@ public class GameState {
     moveCounter = 0;
   }
 
+  /**
+   * Constructs a new <code>GameState</code>, that is cloned from another <code>GameState</code>.
+   *
+   * @param stateToClone the <code>GameState</code> to clone.
+   */
   private GameState(GameState stateToClone) {
     currentPhase = stateToClone.currentPhase;
     currentPlayer = stateToClone.currentPlayer;
@@ -42,14 +51,25 @@ public class GameState {
     moveCounter = stateToClone.moveCounter;
   }
 
+  /**
+   * Returns a copy of the current game state.
+   *
+   * @return the copy of the game state.
+   */
   synchronized GameState makeCopy() {
     return new GameState(this);
   }
 
+  /** Increases the current move counter. */
   void increaseMoveCounter() {
     moveCounter++;
   }
 
+  /**
+   * Return the current move counter of the game.
+   *
+   * @return the current move counter.
+   */
   public int getMoveCounter() {
     return moveCounter;
   }

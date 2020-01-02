@@ -66,7 +66,11 @@ public class GameField {
     return map;
   }
 
-  // TODO: javadoc
+  /**
+   * Returns all {@link Cell cells} that are currently empty.
+   *
+   * @return A set with all cells that have no disk on them.
+   */
   Set<Cell> getEmptyCells() {
     Set<Cell> set = new HashSet<>();
 
@@ -81,7 +85,11 @@ public class GameField {
     return set;
   }
 
-  // TODO: javadoc
+  /**
+   * Returns the middle four {@link Cell cells} that are currently empty.
+   *
+   * @return A set with all cells that are empty and withhin the mid.
+   */
   Set<Cell> getMiddleFourEmptyCells() {
     Set<Cell> set = new HashSet<>();
 

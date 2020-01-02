@@ -25,12 +25,20 @@ public enum Player {
     return playerName;
   }
 
-  // TODO: javadoc
+  /**
+   * Return the current amount of disks the player has left.
+   *
+   * @return the amount of disks.
+   */
   public int getDiskCount() {
     return diskCount;
   }
 
-  // TODO: javadoc
+  /**
+   * Set the amount of disks the player holds.
+   *
+   * @param diskCount The amount of disks the player holds now.
+   */
   void setDiskCount(int diskCount) {
     this.diskCount = diskCount;
   }
