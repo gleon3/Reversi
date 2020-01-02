@@ -25,11 +25,13 @@ public class CornerAssessor implements StateAssessor {
     int aiCorner = 0;
     int humanCorner = 0;
 
-    Cell[] cornerCells = {
-            new Cell(0,0),
-            new Cell(0, GameField.SIZE - 1),
-            new Cell(GameField.SIZE - 1, 0),
-            new Cell(GameField.SIZE - 1, GameField.SIZE - 1)};
+    Cell[] cornerCells =
+            {
+                    new Cell(0,0),
+                    new Cell(0, GameField.SIZE - 1),
+                    new Cell(GameField.SIZE - 1, 0),
+                    new Cell(GameField.SIZE - 1, GameField.SIZE - 1)
+            };
 
     for (Cell cornerCell : cornerCells) {
       if (state.getField().get(cornerCell).isPresent()
