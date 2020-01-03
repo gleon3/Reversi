@@ -120,7 +120,7 @@ public class Reversi implements Model {
 
     state.getField().set(to, new Disk(currentPlayer));
     flipDisks(to, currentPlayer);
-    currentPlayer.setDiskCount(currentPlayer.getDiskCount() - 1);
+    state.setDiskCount(currentPlayer, state.getDiskCount(currentPlayer) - 1);
 
     Player nextPlayer = Player.getOpponentOf(currentPlayer);
     if (!checkForWinningCondition()) {
@@ -427,12 +427,12 @@ public class Reversi implements Model {
 
     // if the player doesn't have any disks left then return an empty set as the player can't make
     // any more moves
-    if (player.getDiskCount() <= 0) {
+    if (state.getDiskCount(player) <= 0) {
       return new HashSet<>();
     }
 
     // in the first four moves the middle four empty cells are possible moves
-    if (player.getDiskCount() > Player.DISK_COUNT_START - 2) {
+    if (state.getDiskCount(player) > Player.DISK_COUNT_START - 2) {
       return state.getField().getMiddleFourEmptyCells();
     }
 

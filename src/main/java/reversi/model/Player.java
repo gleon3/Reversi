@@ -8,7 +8,6 @@ public enum Player {
   private final String playerName;
 
   static final int DISK_COUNT_START = 32;
-  private int diskCount = DISK_COUNT_START;
 
   /**
    * Creates a new <code>Player</code>-object that takes a string argument for the internal
@@ -23,24 +22,6 @@ public enum Player {
   @Override
   public String toString() {
     return playerName;
-  }
-
-  /**
-   * Return the current amount of disks the player has left.
-   *
-   * @return the amount of disks.
-   */
-  public int getDiskCount() {
-    return diskCount;
-  }
-
-  /**
-   * Set the amount of disks the player holds.
-   *
-   * @param diskCount The amount of disks the player holds now.
-   */
-  void setDiskCount(int diskCount) {
-    this.diskCount = diskCount;
   }
 
   /**

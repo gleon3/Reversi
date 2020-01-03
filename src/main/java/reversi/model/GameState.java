@@ -18,6 +18,8 @@ public class GameState {
   private Player currentPlayer;
   private GameField gameField;
   private Player winner;
+  private int diskCountBlack;
+  private int diskCountWhite;
 
   private int moveCounter;
 
@@ -29,8 +31,8 @@ public class GameState {
    * @param field the field to start the <code>GameState</code> with.
    */
   GameState(GameField field) {
-    Player.BLACK.setDiskCount(Player.DISK_COUNT_START);
-    Player.WHITE.setDiskCount(Player.DISK_COUNT_START);
+    diskCountWhite = Player.DISK_COUNT_START;
+    diskCountBlack = Player.DISK_COUNT_START;
     currentPhase = Phase.RUNNING;
     currentPlayer = Player.BLACK;
     gameField = field;
@@ -44,6 +46,8 @@ public class GameState {
    * @param stateToClone the <code>GameState</code> to clone.
    */
   private GameState(GameState stateToClone) {
+    diskCountWhite = stateToClone.diskCountWhite;
+    diskCountBlack = stateToClone.diskCountBlack;
     currentPhase = stateToClone.currentPhase;
     currentPlayer = stateToClone.currentPlayer;
     gameField = new GameField(stateToClone.gameField);
@@ -58,6 +62,38 @@ public class GameState {
    */
   synchronized GameState makeCopy() {
     return new GameState(this);
+  }
+
+  /**
+   * Return the current amount of disks the player has left.
+   *
+   * @param player The player to get the amount of disks for.
+   * @return the amount of disks.
+   */
+  int getDiskCount(Player player) {
+    if (player.equals(Player.WHITE)) {
+      return diskCountWhite;
+    } else if (player.equals(Player.BLACK)) {
+      return diskCountBlack;
+    } else {
+      throw new AssertionError("Unhandled Player!");
+    }
+  }
+
+  /**
+   * Set the amount of disks the player holds.
+   *
+   * @param player The player to set the amount of disks for.
+   * @param diskCount The amount of disks the player holds now.
+   */
+  void setDiskCount(Player player, int diskCount) {
+    if (player.equals(Player.WHITE)) {
+      diskCountWhite = diskCount;
+    } else if (player.equals(Player.BLACK)) {
+      diskCountBlack = diskCount;
+    } else {
+      throw new AssertionError("Unhandled Player!");
+    }
   }
 
   /** Increases the current move counter. */
