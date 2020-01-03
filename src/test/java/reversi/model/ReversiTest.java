@@ -47,18 +47,19 @@ class ReversiTest {
 
     // act
     Player playerBeforeMove = reversi.getState().getCurrentPlayer();
-    int diskCountBeforeMove = playerBeforeMove.getDiskCount();
+    int diskCountBeforeMove = reversi.getState().getDiskCount(playerBeforeMove);
     Cell cell = new Cell(4, 4);
     boolean move = reversi.move(cell);
 
     // assert
     Assertions.assertTrue(move);
-    Assertions.assertEquals(playerBeforeMove.getDiskCount(), diskCountBeforeMove - 1);
     Assertions.assertEquals(
-        reversi.getState().getCurrentPlayer(), Player.getOpponentOf(playerBeforeMove));
+            reversi.getState().getDiskCount(playerBeforeMove), diskCountBeforeMove - 1);
+    Assertions.assertEquals(
+            reversi.getState().getCurrentPlayer(), Player.getOpponentOf(playerBeforeMove));
     Assertions.assertTrue(
-        reversi.getState().getField().get(cell).isPresent()
-            && reversi.getState().getField().get(cell).get().getPlayer().equals(playerBeforeMove));
+            reversi.getState().getField().get(cell).isPresent()
+                    && reversi.getState().getField().get(cell).get().getPlayer().equals(playerBeforeMove));
   }
 
   @Test
@@ -68,11 +69,11 @@ class ReversiTest {
 
     // act
     Player playerBeforeMove = reversi.getState().getCurrentPlayer();
-    int diskCountBeforeMove = playerBeforeMove.getDiskCount();
+    int diskCountBeforeMove = reversi.getState().getDiskCount(playerBeforeMove);
     Cell cell = new Cell(0, 0);
     reversi.move(cell);
     Player playerAfterMove = reversi.getState().getCurrentPlayer();
-    int diskCountAfterMove = playerBeforeMove.getDiskCount();
+    int diskCountAfterMove = reversi.getState().getDiskCount(playerBeforeMove);
 
     // assert
     Assertions.assertEquals(playerAfterMove, playerBeforeMove);
@@ -120,27 +121,27 @@ class ReversiTest {
     reversi.newGame();
 
     int numberOfPossibleMoves0 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves0, 4);
     reversi.move(new Cell(3, 3));
     int numberOfPossibleMoves1 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves1, 3);
     reversi.move(new Cell(3, 4));
     int numberOfPossibleMoves2 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves2, 2);
     reversi.move(new Cell(4, 4));
     int numberOfPossibleMoves3 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves3, 1);
     reversi.move(new Cell(4, 3));
     int numberOfPossibleMoves4 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves4, 4);
     reversi.move(new Cell(3, 5));
     int numberOfPossibleMoves5 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves5, 3);
   }
 
@@ -191,8 +192,8 @@ class ReversiTest {
     // set up board
     reversi.newGame();
     reversi.getState().setCurrentPlayer(Player.BLACK);
-    Player.BLACK.setDiskCount(20);
-    Player.WHITE.setDiskCount(10);
+    reversi.getState().setDiskCount(Player.BLACK, 20);
+    reversi.getState().setDiskCount(Player.WHITE, 20);
     for (int row = 0; row < GameField.SIZE; row++) {
       for (int col = 0; col < GameField.SIZE; col++) {
         if (!(row == 0 && col == 0)) {
@@ -224,8 +225,8 @@ class ReversiTest {
     // set up board
     reversi.newGame();
     reversi.getState().setCurrentPlayer(Player.BLACK);
-    Player.BLACK.setDiskCount(1);
-    Player.WHITE.setDiskCount(3);
+    reversi.getState().setDiskCount(Player.BLACK, 1);
+    reversi.getState().setDiskCount(Player.WHITE, 3);
     reversi.getState().getField().set(new Cell(3, 3), new Disk(Player.BLACK));
     reversi.getState().getField().set(new Cell(4, 4), new Disk(Player.BLACK));
     reversi.getState().getField().set(new Cell(3, 4), new Disk(Player.WHITE));
@@ -235,7 +236,7 @@ class ReversiTest {
     Phase newPhase = reversi.getState().getCurrentPhase();
 
     Assertions.assertTrue(move);
-    Assertions.assertEquals(Player.BLACK.getDiskCount(), 0);
+    Assertions.assertEquals(reversi.getState().getDiskCount(Player.BLACK), 0);
     Assertions.assertEquals(newPhase, Phase.FINISHED);
 
     Optional<Player> winner = reversi.getState().getWinner();
