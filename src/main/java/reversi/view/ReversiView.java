@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -15,7 +16,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-/** Implementation of a view class to visualize a reversi game and handle the user input. */
+import reversi.model.Model;
+import reversi.model.Phase;
+import reversi.model.Player;
+
+/**
+ * Implementation of the main view to visualize a reversi game. It provides functionalities for
+ * quitting and reseting the game and by the press of a button show and delete possible moves. Also
+ * it shows which player has a turn.
+ */
 public class ReversiView extends JPanel implements PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
@@ -25,28 +34,34 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   private JLabel infoLabel;
   private JButton quit;
   private JButton reset;
+  private JButton possibleMoves;
+  private JButton deleteMoves;
   private static final Color BACKGROUND_COLOR = new Color(0, 153, 0);
   private static final Color FONT_COLOR = new Color(240, 240, 240);
   private static final int FONTSIZE_HEADLINE = 50;
   private static final int FONTSIZE_INFO_LABEL = 20;
 
-  private Controller controller;
+  private ReversiController controller;
+  private Model model;
 
   /**
    * Creates a view where all elements are set up to play a reversi game.
    *
    * @param controller Validates and forwards any user input.
+   * @param model Model that handles the logic of the game.
    */
-  ReversiView(Controller controller) {
-    this.controller = controller;
-    drawboard = new DrawBoard(controller);
+  ReversiView(Model model, Controller controller) {
+    this.model = model;
+    this.controller = (ReversiController) controller;
+    drawboard = new DrawBoard(model, controller);
     createDesign();
     setActionListener();
-    // model.addPropertyChangeListener(this);
+    model.addPropertyChangeListener(this);
   }
 
   private void createDesign() {
-    drawboard.setBounds(0, 0, 600, 600);
+
+    drawboard.setBounds(90, 100, 400, 400);
 
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
@@ -60,29 +75,45 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
     infoLabel = new JLabel();
     infoLabel.setForeground(FONT_COLOR);
-    // For test purpose only.
-    infoLabel.setText("Current Player: White");
     infoLabel.setFont(new Font("Serif", Font.BOLD, FONTSIZE_INFO_LABEL));
-    infoLabel.setBounds(190, -20, 300, 200);
+
+    JPanel infoPanel = new JPanel();
+    infoPanel.add(infoLabel);
+    infoPanel.setBackground(BACKGROUND_COLOR);
+    infoPanel.setBounds(0, 60, 600, 40);
 
     quit = new JButton("Quit");
     quit.setToolTipText("Quit the game");
-    quit.setBounds(220, 510, 50, 25);
+    quit.setBounds(170, 510, 50, 25);
     setUpButton(quit);
 
     reset = new JButton("Reset");
     reset.setToolTipText("Reset the game");
-    reset.setBounds(300, 510, 50, 25);
+    reset.setBounds(225, 510, 50, 25);
     setUpButton(reset);
+
+    possibleMoves = new JButton("Moves");
+    possibleMoves.setToolTipText("Shows the possible moves on the board.");
+    possibleMoves.setBounds(290, 510, 50, 25);
+    setUpButton(possibleMoves);
+
+    deleteMoves = new JButton("Delete");
+    deleteMoves.setToolTipText("Deletes the showing moves from the board");
+    deleteMoves.setBounds(355, 510, 50, 25);
+    setUpButton(deleteMoves);
 
     add(reset);
     add(quit);
+    add(possibleMoves);
+    add(deleteMoves);
     add(headline);
-    add(infoLabel);
+    add(infoPanel);
     add(drawboard);
+    updateCurrentPlayerInfo();
     addMouseListener((MouseListener) controller);
   }
 
+  /** Method for setting up the buttons in a similar fashion. */
   private void setUpButton(JButton button) {
     button.setForeground(FONT_COLOR);
     button.setBackground(BACKGROUND_COLOR);
@@ -100,8 +131,36 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
             handleQuit();
           }
         });
+
+    reset.addActionListener(
+        new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            handleReset();
+          }
+        });
+
+    possibleMoves.addActionListener(
+        new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            showPossibleMoves();
+          }
+        });
+
+    deleteMoves.addActionListener(
+        new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            deletePossibleMoves();
+          }
+        });
   }
 
+  /** Shows a message and asks the user if he wants to quit the game. */
   private void handleQuit() {
     int result =
         JOptionPane.showConfirmDialog(
@@ -117,13 +176,40 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     }
   }
 
-  /* private void updateCurrentPlayerInfo() {
-    setInfoLabelText("Current Player: ");
+  /** Shows a message and asks the user if he wants to reset the game. */
+  private void handleReset() {
+    int result =
+        JOptionPane.showConfirmDialog(
+            this,
+            "Do you really want to reset this game?",
+            "Please confirm your choice",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+
+    // do nothing if user didn't click on the 'yes'-option
+    if (result == JOptionPane.YES_OPTION) {
+      controller.resetGame();
+    }
   }
 
-  private void setInfoLabelText(String message) {
-    infoLabel.setText(message);
-  }*/
+  /** Shows all possible moves on the reversi game board. */
+  private void showPossibleMoves() {
+    controller.possibleMoves = model.getPossibleMovesForPlayer(model.getState().getCurrentPlayer());
+    drawboard.repaint();
+  }
+
+  /** Deletes all current shown possible moves from the game board. */
+  private void deletePossibleMoves() {
+    if (controller.possibleMoves != null) {
+      controller.possibleMoves.clear();
+    }
+    drawboard.repaint();
+  }
+
+  /** Updates the label text that informs the user about the current player. */
+  private void updateCurrentPlayerInfo() {
+    infoLabel.setText("Current player: " + model.getState().getCurrentPlayer());
+  }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
@@ -145,7 +231,37 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
    */
   private void handleChangeEvent(PropertyChangeEvent event) {
     // Call paintComponent() when model has changed.
+
+    updateCurrentPlayerInfo();
     drawboard.repaint();
-    // TODO
+    openDialogIfGameIsOver();
+  }
+
+  /**
+   * Checks the model if the game has ended. In that case, a dialog is shown to the user in which a
+   * respective message with the winner is shown.
+   */
+  private void openDialogIfGameIsOver() {
+    if (model.getState().getCurrentPhase() != Phase.FINISHED) {
+      return;
+    }
+
+    Optional<Player> playerOpt = model.getState().getWinner();
+    if (playerOpt.isPresent()) {
+      Player p = playerOpt.get();
+      showDialogWindow("Finished!", "There's a winner: Player " + p);
+    } else {
+      showDialogWindow("Finished!", "Game is over. It's a tie!");
+    }
+  }
+
+  /**
+   * Shows a message pane that displays the outcome of the game.
+   *
+   * @param header The header text.
+   * @param message An elaborate message why the game has ended.
+   */
+  private void showDialogWindow(String header, String message) {
+    JOptionPane.showMessageDialog(this, message, header, JOptionPane.INFORMATION_MESSAGE);
   }
 }

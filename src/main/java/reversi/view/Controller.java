@@ -1,5 +1,7 @@
 package reversi.view;
 
+import reversi.model.Cell;
+
 /**
  * The main controller interface of the reversi game. It takes the actions from the user and handles
  * them accordingly. This is done by invoking the necessary model-methods.
@@ -40,10 +42,8 @@ public interface Controller {
   /**
    * Validates the input and in case of success asks the model to execute a move on the reversi
    * board.
-   *
-   * @return <code>true</code> if validating the input was successful, <code>false</code> otherwise.
    */
-  boolean move();
+  void move(Cell to);
 
   /** Dispose any remaining resources. */
   void dispose();

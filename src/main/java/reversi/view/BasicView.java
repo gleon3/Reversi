@@ -8,6 +8,8 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
+import reversi.model.Model;
+
 /**
  * Implementation of a BasicView to handle the other views via a cardLayout, so the views can be
  * changed by user input.
@@ -58,8 +60,8 @@ public class BasicView extends JFrame implements View {
   }
 
   @Override
-  public void showHotseatGame() {
-    reversiView = new ReversiView(controller);
+  public void showHotseatGame(Model model) {
+    reversiView = new ReversiView(model, controller);
     contentPane.add(reversiView, GAME_VIEW);
     cardLayout.show(getContentPane(), GAME_VIEW);
   }
