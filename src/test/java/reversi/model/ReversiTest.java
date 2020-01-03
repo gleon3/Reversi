@@ -58,8 +58,8 @@ class ReversiTest {
     Assertions.assertEquals(
             reversi.getState().getCurrentPlayer(), Player.getOpponentOf(playerBeforeMove));
     Assertions.assertTrue(
-            reversi.getState().getField().get(cell).isPresent()
-                    && reversi.getState().getField().get(cell).get().getPlayer().equals(playerBeforeMove));
+        reversi.getState().getField().get(cell).isPresent()
+            && reversi.getState().getField().get(cell).get().getPlayer().equals(playerBeforeMove));
   }
 
   @Test
