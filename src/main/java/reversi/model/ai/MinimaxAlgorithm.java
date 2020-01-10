@@ -57,12 +57,14 @@ public class MinimaxAlgorithm {
     savedCell = null;
     maxPlayer = gameState.getCurrentPlayer();
     minPlayer = getOpponentOf(maxPlayer);
-    max(maxPlayer, 0);
+    double alpha = -Double.MAX_VALUE;
+    double beta = Double.MIN_VALUE;
+    max(maxPlayer, 0, alpha, beta);
 
     return savedCell;
   }
 
-  private double max(Player player, int currentDepth) {
+  private double max(Player player, int currentDepth, double alpha, double beta) {
     double currentStateScore = assessor.computeValue(reversi.getState(), minPlayer, currentDepth);
 
     if (reversi.getState().getCurrentPhase() == Phase.FINISHED || currentDepth >= LOOK_AHEAD) {
@@ -71,7 +73,7 @@ public class MinimaxAlgorithm {
 
     if (reversi.getState().getCurrentPlayer() != player) {
       // player skipped
-      return max(getOpponentOf(player), currentDepth + 1) + currentStateScore;
+      return max(getOpponentOf(player), currentDepth + 1, alpha, beta) + currentStateScore;
     }
 
     double maxValue = -Double.MAX_VALUE;
@@ -83,13 +85,21 @@ public class MinimaxAlgorithm {
     for (Cell targetCell : targetCells) {
       reversi.move(targetCell);
 
-      double value = min(getOpponentOf(player), currentDepth + 1) + currentStateScore;
+      double value = min(getOpponentOf(player), currentDepth + 1, alpha, beta) + currentStateScore;
 
       reversi.undoMove();
 
       if (Double.compare(value, maxValue) > 0) {
         maxValue = value;
         currentBestCell = targetCell;
+      }
+
+      if (Double.compare(value, alpha) > 0) {
+        alpha = value;
+      }
+
+      if (Double.compare(alpha, beta) >= 0) {
+        break;
       }
     }
 
@@ -100,7 +110,7 @@ public class MinimaxAlgorithm {
     return maxValue;
   }
 
-  private double min(Player player, int currentDepth) {
+  private double min(Player player, int currentDepth, double alpha, double beta) {
     double currentStateScore = assessor.computeValue(reversi.getState(), minPlayer, currentDepth);
 
     if (reversi.getState().getCurrentPhase() == Phase.FINISHED || currentDepth >= LOOK_AHEAD) {
@@ -109,7 +119,7 @@ public class MinimaxAlgorithm {
 
     if (reversi.getState().getCurrentPlayer() != player) {
       // player skipped
-      return min(getOpponentOf(player), currentDepth + 1) + currentStateScore;
+      return min(getOpponentOf(player), currentDepth + 1, alpha, beta) + currentStateScore;
     }
 
     double minValue = Double.MAX_VALUE;
@@ -121,13 +131,21 @@ public class MinimaxAlgorithm {
     for (Cell targetCell : targetCells) {
       reversi.move(targetCell);
 
-      double value = max(getOpponentOf(player), currentDepth + 1) + currentStateScore;
+      double value = max(getOpponentOf(player), currentDepth + 1, alpha, beta) + currentStateScore;
 
       reversi.undoMove();
 
       if (Double.compare(value, minValue) < 0) {
         minValue = value;
         currentBestCell = targetCell;
+      }
+
+      if (Double.compare(value, beta) < 0) {
+        beta = value;
+      }
+
+      if (Double.compare(alpha, beta) >= 0) {
+        break;
       }
     }
 
