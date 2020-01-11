@@ -54,9 +54,9 @@ class ReversiTest {
     // assert
     Assertions.assertTrue(move);
     Assertions.assertEquals(
-        reversi.getState().getDiskCount(playerBeforeMove), diskCountBeforeMove - 1);
+            reversi.getState().getDiskCount(playerBeforeMove), diskCountBeforeMove - 1);
     Assertions.assertEquals(
-        reversi.getState().getCurrentPlayer(), Player.getOpponentOf(playerBeforeMove));
+            reversi.getState().getCurrentPlayer(), Player.getOpponentOf(playerBeforeMove));
     Assertions.assertTrue(
         reversi.getState().getField().get(cell).isPresent()
             && reversi.getState().getField().get(cell).get().getPlayer().equals(playerBeforeMove));
@@ -121,27 +121,27 @@ class ReversiTest {
     reversi.newGame();
 
     int numberOfPossibleMoves0 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves0, 4);
     reversi.move(new Cell(3, 3));
     int numberOfPossibleMoves1 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves1, 3);
     reversi.move(new Cell(3, 4));
     int numberOfPossibleMoves2 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves2, 2);
     reversi.move(new Cell(4, 4));
     int numberOfPossibleMoves3 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves3, 1);
     reversi.move(new Cell(4, 3));
     int numberOfPossibleMoves4 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves4, 4);
     reversi.move(new Cell(3, 5));
     int numberOfPossibleMoves5 =
-        reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
+            reversi.getPossibleMovesForPlayer(reversi.getState().getCurrentPlayer()).size();
     Assertions.assertEquals(numberOfPossibleMoves5, 3);
   }
 

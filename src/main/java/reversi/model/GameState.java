@@ -157,9 +157,9 @@ public class GameState {
   public synchronized Optional<Player> getWinner() {
     if (currentPhase != Phase.FINISHED) {
       throw new IllegalStateException(
-          String.format(
-              "Expected current phase to be %s, but instead it is %s",
-              Phase.FINISHED, currentPhase));
+              String.format(
+                      "Expected current phase to be %s, but instead it is %s",
+                      Phase.FINISHED, currentPhase));
     }
     return Optional.ofNullable(winner);
   }
@@ -193,8 +193,8 @@ public class GameState {
   public synchronized Set<Cell> getAllCellsOfPlayer(Player player) {
     requireNonNull(player);
     return gameField.getCellsOccupiedWithDisks().entrySet().stream()
-        .filter(x -> player == x.getValue())
-        .map(Map.Entry::getKey)
-        .collect(Collectors.toCollection(HashSet::new));
+            .filter(x -> player == x.getValue())
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toCollection(HashSet::new));
   }
 }
