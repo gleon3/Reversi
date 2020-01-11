@@ -12,7 +12,7 @@ public interface View {
   void showStartMenu();
 
   /** Shows the hotseat game to the user. */
-  void showHotseatGame(Model model);
+  void showGame(Model model);
 
   /** Shows the Lobby to the user. */
   void showLobby();

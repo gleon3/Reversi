@@ -1,21 +1,25 @@
 package reversi.view;
 
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
+import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Model;
 import reversi.model.Reversi;
 
 /** Implementation of a controller class that handles and validates the user input. */
-public class ReversiController implements Controller, MouseListener {
+public class ReversiController extends MouseAdapter implements Controller {
 
   private View view;
-  private static final int DIFFERENCE_X = 90;
+  private static final int DIFFERENCE_X = 110;
   private static final int DIFFERENCE_Y = 100;
-  private static final int FIELD_SIZE = 50;
+  private static final int FIELD_SIZE = 70;
   private static final int FIRST_ROW = 0;
   private static final int LAST_ROW = 7;
   private int mouseY;
@@ -35,14 +39,10 @@ public class ReversiController implements Controller, MouseListener {
   }
 
   @Override
-  public void setView(View view) { // TODO Auto-generated method stub
-  }
-
-  @Override
   public void resetGame() {
     try {
       model.newGame();
-    } catch (IOException e) { // TODO Auto-generated catch block
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -63,13 +63,13 @@ public class ReversiController implements Controller, MouseListener {
   @Override
   public void startHotseatGame() {
     model = new Reversi();
-    view.showHotseatGame(model);
+    view.showGame(model);
   }
 
   @Override
   public void startAiGame() {
-    // model = new AiReversi();
-    // view.showHotseatGame(model);
+    model = new AiReversi();
+    view.showGame(model);
   }
 
   @Override
@@ -78,20 +78,23 @@ public class ReversiController implements Controller, MouseListener {
   }
 
   @Override
-  public void startClient() { // TODO Auto-generated method stub
-  }
-
-  @Override
-  public void startServer() { // TODO Auto-generated method stub
+  public void startNetworkGame(InetAddress serverAddress) {
+    // model = new NetworkReversi(serverAddress);
+    try {
+      model.newGame();
+      view.showGame(model);
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Creating network game failed. The following error occurred: " + e.getMessage(),
+          "Error creating network game",
+          JOptionPane.ERROR_MESSAGE);
+    }
   }
 
   @Override
   public void move(Cell to) {
     model.move(to);
-  }
-
-  @Override
-  public void dispose() { // TODO Auto-generated method stub
   }
 
   @Override
@@ -114,21 +117,5 @@ public class ReversiController implements Controller, MouseListener {
       }
       move(to);
     }
-  }
-
-  @Override
-  public void mousePressed(MouseEvent e) { // TODO Auto-generated method stub
-  }
-
-  @Override
-  public void mouseReleased(MouseEvent e) { // TODO Auto-generated method stub
-  }
-
-  @Override
-  public void mouseEntered(MouseEvent e) { // TODO Auto-generated method stub
-  }
-
-  @Override
-  public void mouseExited(MouseEvent e) { // TODO Auto-generated method stub
   }
 }

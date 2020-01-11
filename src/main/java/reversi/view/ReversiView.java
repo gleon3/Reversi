@@ -1,7 +1,6 @@
 package reversi.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,9 +28,10 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
-  private DrawBoard drawboard;
+  private DrawBoard drawBoard;
   private JLabel headline;
   private JLabel infoLabel;
+  private JLabel errorLabel;
   private JButton quit;
   private JButton reset;
   private JButton possibleMoves;
@@ -40,6 +40,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   private static final Color FONT_COLOR = new Color(240, 240, 240);
   private static final int FONTSIZE_HEADLINE = 50;
   private static final int FONTSIZE_INFO_LABEL = 20;
+  private static final int FONTSIZE_ERROR_LABEL = 15;
 
   private ReversiController controller;
   private Model model;
@@ -53,7 +54,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   ReversiView(Model model, Controller controller) {
     this.model = model;
     this.controller = (ReversiController) controller;
-    drawboard = new DrawBoard(model, controller);
+    drawBoard = new DrawBoard(model, controller);
     createDesign();
     setActionListener();
     model.addPropertyChangeListener(this);
@@ -61,45 +62,45 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
   private void createDesign() {
 
-    drawboard.setBounds(90, 100, 400, 400);
+    drawBoard.setBounds(110, 100, 560, 560);
 
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
-    setPreferredSize(new Dimension(600, 600));
 
     headline = new JLabel();
     headline.setForeground(FONT_COLOR);
     headline.setText("Reversi");
     headline.setFont(new Font("Serif", Font.BOLD, FONTSIZE_HEADLINE));
-    headline.setBounds(215, -70, 300, 200);
+    headline.setBounds(290, 5, 400, 50);
 
     infoLabel = new JLabel();
     infoLabel.setForeground(FONT_COLOR);
     infoLabel.setFont(new Font("Serif", Font.BOLD, FONTSIZE_INFO_LABEL));
+    infoLabel.setBounds(280, 50, 400, 50);
 
-    JPanel infoPanel = new JPanel();
-    infoPanel.add(infoLabel);
-    infoPanel.setBackground(BACKGROUND_COLOR);
-    infoPanel.setBounds(0, 60, 600, 40);
+    errorLabel = new JLabel();
+    errorLabel.setForeground(Color.RED);
+    errorLabel.setFont(new Font("Serif", Font.BOLD, FONTSIZE_ERROR_LABEL));
+    errorLabel.setBounds(350, 730, 600, 40);
 
     quit = new JButton("Quit");
     quit.setToolTipText("Quit the game");
-    quit.setBounds(170, 510, 50, 25);
+    quit.setBounds(265, 680, 50, 25);
     setUpButton(quit);
 
     reset = new JButton("Reset");
     reset.setToolTipText("Reset the game");
-    reset.setBounds(225, 510, 50, 25);
+    reset.setBounds(320, 680, 50, 25);
     setUpButton(reset);
 
     possibleMoves = new JButton("Moves");
     possibleMoves.setToolTipText("Shows the possible moves on the board.");
-    possibleMoves.setBounds(290, 510, 50, 25);
+    possibleMoves.setBounds(385, 680, 50, 25);
     setUpButton(possibleMoves);
 
     deleteMoves = new JButton("Delete");
     deleteMoves.setToolTipText("Deletes the showing moves from the board");
-    deleteMoves.setBounds(355, 510, 50, 25);
+    deleteMoves.setBounds(450, 680, 50, 25);
     setUpButton(deleteMoves);
 
     add(reset);
@@ -107,8 +108,9 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     add(possibleMoves);
     add(deleteMoves);
     add(headline);
-    add(infoPanel);
-    add(drawboard);
+    add(infoLabel);
+    add(errorLabel);
+    add(drawBoard);
     updateCurrentPlayerInfo();
     addMouseListener((MouseListener) controller);
   }
@@ -192,10 +194,28 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     }
   }
 
+  /**
+   * Disposes the reversiView by unsubscribing it from the model and calling the drawBoard dispose()
+   * function.
+   */
+  void dispose() {
+    model.removePropertyChangeListener(this);
+    drawBoard.dispose();
+  }
+
+  void showErrorMessage(String message) {
+    errorLabel.setText(message);
+  }
+
+  /** Hides an error message that was previously displayed to the user. */
+  private void hideErrorMessage() {
+    errorLabel.setText("");
+  }
+
   /** Shows all possible moves on the reversi game board. */
   private void showPossibleMoves() {
     controller.possibleMoves = model.getPossibleMovesForPlayer(model.getState().getCurrentPlayer());
-    drawboard.repaint();
+    drawBoard.repaint();
   }
 
   /** Deletes all current shown possible moves from the game board. */
@@ -203,7 +223,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     if (controller.possibleMoves != null) {
       controller.possibleMoves.clear();
     }
-    drawboard.repaint();
+    drawBoard.repaint();
   }
 
   /** Updates the label text that informs the user about the current player. */
@@ -230,11 +250,11 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
    * @param event The event that has been fired by the model.
    */
   private void handleChangeEvent(PropertyChangeEvent event) {
-    // Call paintComponent() when model has changed.
 
+    // Call paintComponent() when model has changed.
     updateCurrentPlayerInfo();
-    drawboard.repaint();
     openDialogIfGameIsOver();
+    hideErrorMessage();
   }
 
   /**

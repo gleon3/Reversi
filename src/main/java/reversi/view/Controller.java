@@ -1,5 +1,7 @@
 package reversi.view;
 
+import java.net.InetAddress;
+
 import reversi.model.Cell;
 
 /**
@@ -7,13 +9,6 @@ import reversi.model.Cell;
  * them accordingly. This is done by invoking the necessary model-methods.
  */
 public interface Controller {
-
-  /**
-   * Set the view that the controller will use afterwards.
-   *
-   * @param view The {@link View}.
-   */
-  void setView(View view);
 
   /** Initializes and starts the user interface. */
   void start();
@@ -31,10 +26,7 @@ public interface Controller {
   void startAiGame();
 
   /** Start a client that can be connected to a server. */
-  void startClient();
-
-  /** Start a server that waits for clients to connect. */
-  void startServer();
+  void startNetworkGame(InetAddress serverAddress);
 
   /** Sets a Lobby to create a new network game and shows not started games. */
   void startLobby();
@@ -44,7 +36,4 @@ public interface Controller {
    * board.
    */
   void move(Cell to);
-
-  /** Dispose any remaining resources. */
-  void dispose();
 }

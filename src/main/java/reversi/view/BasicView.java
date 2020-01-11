@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import reversi.model.Model;
 
@@ -18,8 +19,8 @@ public class BasicView extends JFrame implements View {
 
   private static final long serialVersionUID = 1L;
 
-  private static final int MINIMUM_FRAME_HEIGHT = 600;
-  private static final int MINIMUM_FRAME_WIDTH = 600;
+  private static final int MINIMUM_FRAME_HEIGHT = 800;
+  private static final int MINIMUM_FRAME_WIDTH = 800;
 
   private static final String START_VIEW = "Start View";
   private static final String GAME_VIEW = "Game View";
@@ -46,6 +47,7 @@ public class BasicView extends JFrame implements View {
 
     contentPane = getContentPane();
     contentPane.add(startView, START_VIEW);
+    setResizable(false);
   }
 
   @Override
@@ -60,7 +62,7 @@ public class BasicView extends JFrame implements View {
   }
 
   @Override
-  public void showHotseatGame(Model model) {
+  public void showGame(Model model) {
     reversiView = new ReversiView(model, controller);
     contentPane.add(reversiView, GAME_VIEW);
     cardLayout.show(getContentPane(), GAME_VIEW);
@@ -74,10 +76,26 @@ public class BasicView extends JFrame implements View {
   }
 
   @Override
-  public void removeGame() { // TODO Auto-generated method stub
+  public void removeGame() {
+    if (reversiView != null) {
+      contentPane.remove(reversiView);
+      reversiView.dispose();
+      reversiView = null;
+    }
   }
 
   @Override
-  public void showErrorMessage(String message) { // TODO Auto-generated method stub
+  public void dispose() {
+    removeGame();
+    super.dispose();
+  }
+
+  @Override
+  public void showErrorMessage(String message) {
+    if (reversiView != null) {
+      reversiView.showErrorMessage(message);
+    } else {
+      JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
   }
 }
