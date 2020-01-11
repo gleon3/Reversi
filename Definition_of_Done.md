@@ -1,6 +1,5 @@
-- acceptance criteria met
 - coding guidelines (English, Google Java Style Guide) are fulfilled
-- automatic tests are present and passed
+- automatic tests are present if possible and passed
 - code was tested successfully by hand
 - code is documented and commented sufficiently and clearly
 - updated Changelog

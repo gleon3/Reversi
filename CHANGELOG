@@ -1,0 +1,32 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
+.html).
+
+
+## [Zwischenabgabe 1] - 2019-12-22
+### Added
+- User can choose to play hotseat, singleplayer or to go to the lobby from the 
+  start screen.
+- Game view displays the board and all relevant buttons and notifications
+  to play the game.
+
+##[Zwischenabgabe 2] - 2020-01-12
+### Added
+- Implemented full functionality to play a hotseat and a singleplayer game with
+  the GUI.
+- When the game has finished a message is shown to the user, with the 
+  information who has won.
+- Label that shows the current player.
+- User can quit the game with the GUI.
+- User can reset a game with the GUI.
+- Possible moves can be shown to the user by the click of a button.
+- Possible moves that are currently shown can be deleted from the board by the 
+  click of a button.
+
+### Changed
+- In the game lobby the button "quit" has changed to "back" and does not ask 
+  anymore to quit the lobby.
+- Bigger size of the window for a better user experience.
