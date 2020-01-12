@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ##[Zwischenabgabe 2] - 2020-01-12
 ### Added
 - Shell to play reversi in hotseat and singleplayer mode within the console
+- model that consists of necessary logic, so that reversi could be played in hotseat mode
 - Implemented full functionality to play a hotseat and a singleplayer game with
   the GUI.
 - When the game has finished a message is shown to the user, with the 
