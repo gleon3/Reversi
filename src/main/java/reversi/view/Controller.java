@@ -1,17 +1,14 @@
 package reversi.view;
 
+import java.net.InetAddress;
+
+import reversi.model.Cell;
+
 /**
  * The main controller interface of the reversi game. It takes the actions from the user and handles
  * them accordingly. This is done by invoking the necessary model-methods.
  */
 public interface Controller {
-
-  /**
-   * Set the view that the controller will use afterwards.
-   *
-   * @param view The {@link View}.
-   */
-  void setView(View view);
 
   /** Initializes and starts the user interface. */
   void start();
@@ -29,10 +26,7 @@ public interface Controller {
   void startAiGame();
 
   /** Start a client that can be connected to a server. */
-  void startClient();
-
-  /** Start a server that waits for clients to connect. */
-  void startServer();
+  void startNetworkGame(InetAddress serverAddress);
 
   /** Sets a Lobby to create a new network game and shows not started games. */
   void startLobby();
@@ -40,11 +34,6 @@ public interface Controller {
   /**
    * Validates the input and in case of success asks the model to execute a move on the reversi
    * board.
-   *
-   * @return <code>true</code> if validating the input was successful, <code>false</code> otherwise.
    */
-  boolean move();
-
-  /** Dispose any remaining resources. */
-  void dispose();
+  void move(Cell to);
 }

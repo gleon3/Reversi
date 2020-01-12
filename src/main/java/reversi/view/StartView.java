@@ -1,7 +1,6 @@
 package reversi.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,41 +40,49 @@ public class StartView extends JPanel {
   private void createDesign() {
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
-    setPreferredSize(new Dimension(600, 600));
     headline = new JLabel();
     headline.setForeground(FONT_COLOR);
     headline.setText("Reversi");
     headline.setFont(new Font("Serif", Font.BOLD, FONTSIZE_HEADLINE));
-    headline.setBounds(200, -50, 300, 200);
+
+    JPanel headlinePanel = new JPanel();
+    headlinePanel.add(headline);
+    headlinePanel.setBackground(BACKGROUND_COLOR);
+    headlinePanel.setBounds(280, 80, 200, 60);
 
     menu = new JLabel();
     menu.setForeground(FONT_COLOR);
     menu.setText("Main menu");
     menu.setFont(new Font("Serif", Font.BOLD, FONTSIZE_MENU));
-    menu.setBounds(230, 20, 200, 200);
+
+    JPanel menuPanel = new JPanel();
+    menuPanel.add(menu);
+    menuPanel.setBackground(BACKGROUND_COLOR);
+    menuPanel.setBounds(310, 170, 130, 30);
 
     hotseatGameButton = new JButton("Hotseat");
     hotseatGameButton.setToolTipText("Starts an hotseat game");
-    hotseatGameButton.setBounds(240, 200, 60, 25);
+    hotseatGameButton.setBounds(345, 270, 60, 25);
     setUpButton(hotseatGameButton);
 
     singleplayerButton = new JButton("Singleplayer");
     singleplayerButton.setToolTipText("Starts an singleplayer game");
-    singleplayerButton.setBounds(225, 250, 100, 25);
+    singleplayerButton.setBounds(330, 320, 100, 25);
     setUpButton(singleplayerButton);
 
     networkButton = new JButton("Network");
     networkButton.setToolTipText("Go to game lobby");
-    networkButton.setBounds(225, 300, 100, 25);
+    networkButton.setBounds(330, 370, 100, 25);
     setUpButton(networkButton);
 
+    add(menuPanel);
     add(hotseatGameButton);
     add(singleplayerButton);
     add(networkButton);
-    add(headline);
-    add(menu);
+    add(headlinePanel);
   }
 
+  /** Method for setting up the buttons in a similar fashion. */
   private void setUpButton(JButton button) {
     button.setForeground(FONT_COLOR);
     button.setBackground(BACKGROUND_COLOR);

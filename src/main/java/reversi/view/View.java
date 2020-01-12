@@ -1,5 +1,7 @@
 package reversi.view;
 
+import reversi.model.Model;
+
 /** The main interface of the view. It gets the state it displays directly from the model. */
 public interface View {
 
@@ -10,7 +12,7 @@ public interface View {
   void showStartMenu();
 
   /** Shows the hotseat game to the user. */
-  void showHotseatGame();
+  void showGame(Model model);
 
   /** Shows the Lobby to the user. */
   void showLobby();
