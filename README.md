@@ -12,7 +12,7 @@ the correct gradle version.
 
 ## Opening the Project
 
-The Project's jar file can be opened with `java -jar releases/Zwischenabgabe1.jar`
+The Project's jar file can be opened with `java -jar releases/Zwischenabgabe2.jar`
 
 ## Building the Project 
 
@@ -30,8 +30,8 @@ run all checks and create an executable jar:
 ./gradlew.bat build jar
 ```
 
-If the command succeeds, the jar is found in `build/libs/Zwischenabgabe1.jar`.
-This jar can be executed with `java -jar build/libs/Zwischenabgabe1.jar`
+If the command succeeds, the jar is found in `build/libs/Zwischenabgabe2.jar`.
+This jar can be executed with `java -jar build/libs/Zwischenabgabe2.jar`
 
 
 ## Running the Program
