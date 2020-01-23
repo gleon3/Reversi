@@ -3,6 +3,7 @@ package reversi.view;
 import java.net.InetAddress;
 
 import reversi.model.Cell;
+import reversi.model.Player;
 
 /**
  * The main controller interface of the reversi game. It takes the actions from the user and handles
@@ -26,10 +27,13 @@ public interface Controller {
   void startAiGame();
 
   /** Start a client that can be connected to a server. */
-  void startNetworkGame(InetAddress serverAddress);
+  void startNetworkGame(Player player);
 
   /** Sets a Lobby to create a new network game and shows not started games. */
-  void startLobby();
+  void startLobby(InetAddress serverAddress);
+
+  /** Method for joining an open game with an specific game id. */
+  void joinNetworkGame(int gameID, Player player);
 
   /**
    * Validates the input and in case of success asks the model to execute a move on the reversi

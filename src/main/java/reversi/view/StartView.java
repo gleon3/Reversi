@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /** Implementation of a view class to visualize the main menu and handle the user input. */
 public class StartView extends JPanel {
@@ -18,6 +21,9 @@ public class StartView extends JPanel {
   private final Controller controller;
   private JLabel headline;
   private JLabel menu;
+  private JLabel serverAddressLabel;
+  private InetAddress address;
+  private JTextField serverAddress;
   private JButton hotseatGameButton;
   private JButton singleplayerButton;
   private JButton networkButton;
@@ -25,6 +31,7 @@ public class StartView extends JPanel {
   private static final Color FONT_COLOR = new Color(240, 240, 240);
   private static final int FONTSIZE_HEADLINE = 50;
   private static final int FONTSIZE_MENU = 20;
+  private static final int FONTSIZE_SERVER_ADDRESS = 15;
 
   /**
    * Creates a view where all necessary elements are set up to navigate through the game.
@@ -37,6 +44,7 @@ public class StartView extends JPanel {
     setActionListener();
   }
 
+  /** Method that sets up the design of the view and positions all the buttons and headlines. */
   private void createDesign() {
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
@@ -60,6 +68,12 @@ public class StartView extends JPanel {
     menuPanel.setBackground(BACKGROUND_COLOR);
     menuPanel.setBounds(310, 170, 130, 30);
 
+    serverAddressLabel = new JLabel();
+    serverAddressLabel.setForeground(FONT_COLOR);
+    serverAddressLabel.setText("server address: ");
+    serverAddressLabel.setFont(new Font("Serif", Font.BOLD, FONTSIZE_SERVER_ADDRESS));
+    serverAddressLabel.setBounds(200, 395, 150, 50);
+
     hotseatGameButton = new JButton("Hotseat");
     hotseatGameButton.setToolTipText("Starts an hotseat game");
     hotseatGameButton.setBounds(345, 270, 60, 25);
@@ -75,10 +89,15 @@ public class StartView extends JPanel {
     networkButton.setBounds(330, 370, 100, 25);
     setUpButton(networkButton);
 
+    serverAddress = new JTextField("127.0.0.1", 20);
+    serverAddress.setBounds(330, 410, 100, 20);
+
     add(menuPanel);
+    add(serverAddressLabel);
     add(hotseatGameButton);
     add(singleplayerButton);
     add(networkButton);
+    add(serverAddress);
     add(headlinePanel);
   }
 
@@ -115,7 +134,12 @@ public class StartView extends JPanel {
 
           @Override
           public void actionPerformed(ActionEvent event) {
-            controller.startLobby();
+            try {
+              address = InetAddress.getByName(serverAddress.getText());
+            } catch (UnknownHostException e) {
+              e.printStackTrace();
+            }
+            controller.startLobby(address);
           }
         });
   }

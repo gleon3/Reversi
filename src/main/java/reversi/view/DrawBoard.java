@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Set;
@@ -32,17 +30,15 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
   private static final int FIELD_SIZE = 70;
   private static final int X_COORDINATE_ABOVE_LEFT = 0;
   private static final int Y_COORDINATE_ABOVE_LEFT = 0;
-  private static final int X_COORDINATE_SECOND_ROW = 70;
-  private static final int Y_COORDINATE_SECOND_ROW = 70;
   private static final int X_COORDINATE_DOWNRIGHT = 490;
   private static final int Y_COORDINATE_DOWNRIGHT = 490;
-  private static final Color FIELD_DARK = new Color(0, 80, 0);
-  private static final Color FIELD_BRIGHT = new Color(0, 140, 0);
+  private static final Color FIELD = new Color(0, 160, 0);
   private static final Color BOARD_FRAME = Color.BLACK;
+  private static final Color FIELD_FRAME = Color.BLACK;
   private static final int NUMBER_OF_ROWS = 8;
   private static final int NUMBER_OF_COLUMNS = 8;
-  private static final Color POSSIBLE_MOVES_WHITE = new Color(245, 245, 220);
-  private static final Color POSSIBLE_MOVES_BLACK = Color.BLACK;
+  private static final Color POSSIBLE_MOVES_WHITE = new Color(245, 245, 220, 127);
+  private static final Color POSSIBLE_MOVES_BLACK = new Color(0, 0, 0, 127);
   private static final Color DISK_COLOR_BLACK = Color.BLACK;
   private static final Color DISK_COLOR_BRIGHT = new Color(245, 245, 220);
   private ReversiController controller;
@@ -61,48 +57,30 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
     this.controller = (ReversiController) controller;
     this.model = model;
     model.addPropertyChangeListener(this);
-    configureActionListener();
   }
 
   @Override
   protected void paintComponent(Graphics g) {
     g2d = (Graphics2D) g;
 
-    // Paint the dark reversi fields.
-    for (int i = X_COORDINATE_ABOVE_LEFT; i <= X_COORDINATE_DOWNRIGHT; i += FIELD_SIZE) {
-      for (int j = Y_COORDINATE_ABOVE_LEFT; j <= Y_COORDINATE_DOWNRIGHT; j += FIELD_SIZE) {
-        {
-          g2d.setColor(FIELD_DARK);
-          g2d.fillRect(i, j, FIELD_SIZE, FIELD_SIZE);
-        }
-      }
-    }
-
-    // Paint the bright reversi fields row 1, 3, 5, 7.
-    for (int i = X_COORDINATE_ABOVE_LEFT; i <= X_COORDINATE_DOWNRIGHT; i += FIELD_SIZE * 2) {
-      for (int j = Y_COORDINATE_ABOVE_LEFT; j <= Y_COORDINATE_DOWNRIGHT; j += FIELD_SIZE * 2) {
-        {
-          g2d.setColor(FIELD_BRIGHT);
-          g2d.fillRect(i, j, FIELD_SIZE, FIELD_SIZE);
-        }
-      }
-    }
-    // Paint the bright reversi fields row 2, 4, 6, 8.
-    for (int i = X_COORDINATE_SECOND_ROW; i <= X_COORDINATE_DOWNRIGHT; i += FIELD_SIZE * 2) {
-      for (int j = Y_COORDINATE_SECOND_ROW; j <= Y_COORDINATE_DOWNRIGHT; j += FIELD_SIZE * 2) {
-        {
-          g2d.setColor(FIELD_BRIGHT);
-          g2d.fillRect(i, j, FIELD_SIZE, FIELD_SIZE);
-        }
-      }
-    }
-
-    // Frame around the reversi board.
+    // Paint frame and surface of the reversi board.
+    g2d.setColor(FIELD);
+    g2d.fillRect(X_COORDINATE_ABOVE_LEFT, Y_COORDINATE_ABOVE_LEFT, BOARD_SIZE, BOARD_SIZE);
     g2d.setColor(BOARD_FRAME);
     Stroke oldStroke = g2d.getStroke();
     g2d.setStroke(new BasicStroke(4));
     g2d.drawRect(X_COORDINATE_ABOVE_LEFT, Y_COORDINATE_ABOVE_LEFT, BOARD_SIZE, BOARD_SIZE);
     g2d.setStroke(oldStroke);
+
+    // Paint the edges of the field.
+    for (int i = X_COORDINATE_ABOVE_LEFT; i <= X_COORDINATE_DOWNRIGHT; i += FIELD_SIZE) {
+      for (int j = Y_COORDINATE_ABOVE_LEFT; j <= Y_COORDINATE_DOWNRIGHT; j += FIELD_SIZE) {
+        {
+          g2d.setColor(FIELD_FRAME);
+          g2d.drawRect(i, j, FIELD_SIZE, FIELD_SIZE);
+        }
+      }
+    }
 
     // According to the game field place the disks on the reversi board.
     for (int i = 0; i < NUMBER_OF_ROWS; i++) {
@@ -138,26 +116,20 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
     } else if (model.getState().getCurrentPlayer() == Player.WHITE) {
       for (Cell possibleMove : possibleMoves) {
         g2d.setColor(POSSIBLE_MOVES_WHITE);
-        Stroke oldStroke1 = g2d.getStroke();
-        g2d.setStroke(new BasicStroke(3));
-        g2d.drawRect(
+        g2d.fillOval(
             possibleMove.getColumn() * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
             possibleMove.getRow() * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
             FIELD_SIZE,
             FIELD_SIZE);
-        g2d.setStroke(oldStroke1);
       }
     } else if (model.getState().getCurrentPlayer() == Player.BLACK) {
       for (Cell possibleMove : possibleMoves) {
         g2d.setColor(POSSIBLE_MOVES_BLACK);
-        Stroke oldStroke1 = g2d.getStroke();
-        g2d.setStroke(new BasicStroke(3));
-        g2d.drawRect(
+        g2d.fillOval(
             possibleMove.getColumn() * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
             possibleMove.getRow() * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
             FIELD_SIZE,
             FIELD_SIZE);
-        g2d.setStroke(oldStroke1);
       }
     }
   }
@@ -165,17 +137,6 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
   /** Disposes the drawboard by unsubscribing it from the model. */
   void dispose() {
     model.removePropertyChangeListener(this);
-  }
-
-  private void configureActionListener() {
-    addComponentListener(
-        new ComponentAdapter() {
-
-          @Override
-          public void componentResized(ComponentEvent e) {
-            repaint();
-          }
-        });
   }
 
   @Override

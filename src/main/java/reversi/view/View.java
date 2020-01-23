@@ -15,7 +15,7 @@ public interface View {
   void showGame(Model model);
 
   /** Shows the Lobby to the user. */
-  void showLobby();
+  void showLobby(Model model);
 
   /** Removes a game-view if there is currently shown one. */
   void removeGame();

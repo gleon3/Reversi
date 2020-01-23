@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
 import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Model;
+import reversi.model.NetworkReversi;
+import reversi.model.Player;
 import reversi.model.Reversi;
 
 /** Implementation of a controller class that handles and validates the user input. */
@@ -73,22 +73,32 @@ public class ReversiController extends MouseAdapter implements Controller {
   }
 
   @Override
-  public void startLobby() {
-    view.showLobby();
+  public void startLobby(InetAddress address) {
+    model = new NetworkReversi(address);
+    try {
+      model.newGame();
+    } catch (IOException e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    view.showLobby(model);
   }
 
   @Override
-  public void startNetworkGame(InetAddress serverAddress) {
-    // model = new NetworkReversi(serverAddress);
+  public void startNetworkGame(Player player) {
     try {
-      model.newGame();
-      view.showGame(model);
-    } catch (IOException e) {
-      JOptionPane.showMessageDialog(
-          null,
-          "Creating network game failed. The following error occurred: " + e.getMessage(),
-          "Error creating network game",
-          JOptionPane.ERROR_MESSAGE);
+      model.startGame(player);
+    } catch (IOException e) { // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    view.showGame(model);
+  }
+
+  @Override
+  public void joinNetworkGame(int gameID, Player player) {
+    try {
+      model.joinGame(gameID, player);
+    } catch (IOException e) { // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 

@@ -60,6 +60,10 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     model.addPropertyChangeListener(this);
   }
 
+  /**
+   * Method that sets up the design of the view and positions all the objects like the game board
+   * and buttons.
+   */
   private void createDesign() {
 
     drawBoard.setBounds(110, 100, 560, 560);
@@ -112,6 +116,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     add(errorLabel);
     add(drawBoard);
     updateCurrentPlayerInfo();
+    setBoard();
     addMouseListener((MouseListener) controller);
   }
 
@@ -162,6 +167,21 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
         });
   }
 
+  /**
+   * Sets the game board in the moment two clients are connected to the server, otherwise a info
+   * message is shown.
+   */
+  private void setBoard() {
+    if (model.getState().getCurrentPhase() == Phase.RUNNING) {
+      drawBoard.setVisible(true);
+      infoLabel.setBounds(280, 50, 400, 50);
+    } else {
+      drawBoard.setVisible(false);
+      setInfoLabelText("Waiting for player two!");
+      infoLabel.setBounds(270, 300, 400, 50);
+    }
+  }
+
   /** Shows a message and asks the user if he wants to quit the game. */
   private void handleQuit() {
     int result =
@@ -203,6 +223,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     drawBoard.dispose();
   }
 
+  /** Shows an error message. */
   void showErrorMessage(String message) {
     errorLabel.setText(message);
   }
@@ -228,7 +249,16 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
   /** Updates the label text that informs the user about the current player. */
   private void updateCurrentPlayerInfo() {
-    infoLabel.setText("Current player: " + model.getState().getCurrentPlayer());
+    setInfoLabelText("Current player: " + model.getState().getCurrentPlayer());
+  }
+
+  /**
+   * Displays a message in the view.
+   *
+   * @param message The message to be displayed
+   */
+  private void setInfoLabelText(String message) {
+    infoLabel.setText(message);
   }
 
   @Override
@@ -255,6 +285,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     updateCurrentPlayerInfo();
     openDialogIfGameIsOver();
     hideErrorMessage();
+    setBoard();
   }
 
   /**
