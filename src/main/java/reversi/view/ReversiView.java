@@ -131,40 +131,40 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
   private void setActionListener() {
     quit.addActionListener(
-        new ActionListener() {
+            new ActionListener() {
 
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            handleQuit();
-          }
-        });
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                handleQuit();
+              }
+            });
 
     reset.addActionListener(
-        new ActionListener() {
+            new ActionListener() {
 
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            handleReset();
-          }
-        });
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                handleReset();
+              }
+            });
 
     possibleMoves.addActionListener(
-        new ActionListener() {
+            new ActionListener() {
 
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            showPossibleMoves();
-          }
-        });
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                showPossibleMoves();
+              }
+            });
 
     deleteMoves.addActionListener(
-        new ActionListener() {
+            new ActionListener() {
 
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            deletePossibleMoves();
-          }
-        });
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                deletePossibleMoves();
+              }
+            });
   }
 
   /**
@@ -185,12 +185,12 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   /** Shows a message and asks the user if he wants to quit the game. */
   private void handleQuit() {
     int result =
-        JOptionPane.showConfirmDialog(
-            this,
-            "Do you really want to quit this game?",
-            "Please confirm your choice",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Do you really want to quit this game?",
+                    "Please confirm your choice",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
 
     // do nothing if user didn't click on the 'yes'-option
     if (result == JOptionPane.YES_OPTION) {
@@ -201,12 +201,12 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   /** Shows a message and asks the user if he wants to reset the game. */
   private void handleReset() {
     int result =
-        JOptionPane.showConfirmDialog(
-            this,
-            "Do you really want to reset this game?",
-            "Please confirm your choice",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Do you really want to reset this game?",
+                    "Please confirm your choice",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
 
     // do nothing if user didn't click on the 'yes'-option
     if (result == JOptionPane.YES_OPTION) {
@@ -264,13 +264,13 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SwingUtilities.invokeLater(
-        new Runnable() {
+            new Runnable() {
 
-          @Override
-          public void run() {
-            handleChangeEvent(evt);
-          }
-        });
+              @Override
+              public void run() {
+                handleChangeEvent(evt);
+              }
+            });
   }
 
   /**

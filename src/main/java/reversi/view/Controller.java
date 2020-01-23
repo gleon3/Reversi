@@ -1,5 +1,6 @@
 package reversi.view;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 import reversi.model.Cell;
@@ -27,10 +28,13 @@ public interface Controller {
   void startAiGame();
 
   /** Start a client that can be connected to a server. */
-  void startNetworkGame(Player player);
+  void startNetworkGame(Player player) throws IOException;
 
   /** Sets a Lobby to create a new network game and shows not started games. */
   void startLobby(InetAddress serverAddress);
+
+  // TODO javaDoc
+  void stopLobby();
 
   /** Method for joining an open game with an specific game id. */
   void joinNetworkGame(int gameID, Player player);

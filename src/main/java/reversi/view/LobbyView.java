@@ -1,17 +1,17 @@
 package reversi.view;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import reversi.model.Model;
 import reversi.model.Player;
+import reversi.model.network.Game;
 
 /**
  * Implementation of a view class to visualize a game lobby for joining and starting new network
@@ -26,30 +26,15 @@ public class LobbyView extends JPanel {
   private Model model;
   private JLabel headline;
   private JLabel headline2;
-  private JLabel Game1;
-  private JLabel Game2;
-  private JLabel Game3;
+  private JPanel test;
   private JButton quit;
-  private JButton blackButton;
-  private JButton whiteButton;
-  private JButton joinGameBlackPlayer;
-  private JButton joinGameBlackPlayer2;
-  private JButton joinGameBlackPlayer3;
-  private JButton joinGameWhitePlayer;
-  private JButton joinGameWhitePlayer2;
-  private JButton joinGameWhitePlayer3;
+  private JButton startGame;
   private JButton showOpenGames;
   private static final Color BACKGROUND_COLOR = new Color(0, 153, 0);
   private static final Color FONT_COLOR = new Color(240, 240, 240);
   private static final int FONTSIZE_HEADLINE = 40;
   private static final int FONTSIZE_HEADLINE2 = 20;
   private static final int FONTSIZE_CLIENTS = 15;
-  private static final int GAME_1 = 0;
-  private static final int GAME_2 = 1;
-  private static final int GAME_3 = 2;
-  private static final int OPEN_GAME_1 = 1;
-  private static final int OPEN_GAME_2 = 2;
-  private static final int OPEN_GAME_3 = 3;
 
   /**
    * Creates a view where all elements are set up to handle network gaming.
@@ -64,6 +49,7 @@ public class LobbyView extends JPanel {
   }
 
   private void createDesign() {
+    /*
     setLayout(null);
     setBackground(BACKGROUND_COLOR);
     setPreferredSize(new Dimension(600, 600));
@@ -72,105 +58,60 @@ public class LobbyView extends JPanel {
     headline.setForeground(FONT_COLOR);
     headline.setText("Lobby");
     headline.setFont(new Font("Serif", Font.BOLD, FONTSIZE_HEADLINE));
-    headline.setBounds(310, 10, 200, 60);
-
-    blackButton = new JButton("Black");
-    blackButton.setBounds(270, 150, 50, 25);
-    setUpButton(blackButton);
-
-    whiteButton = new JButton("White");
-    whiteButton.setBounds(420, 150, 50, 25);
-    setUpButton(whiteButton);
-
-    joinGameBlackPlayer = new JButton("Join Game");
-    joinGameBlackPlayer.setBounds(370, 300, 100, 25);
-    setUpButton(joinGameBlackPlayer);
-
-    joinGameBlackPlayer2 = new JButton("Join Game");
-    joinGameBlackPlayer2.setBounds(370, 350, 100, 25);
-    setUpButton(joinGameBlackPlayer2);
-
-    joinGameBlackPlayer3 = new JButton("Join Game");
-    joinGameBlackPlayer3.setBounds(370, 400, 100, 25);
-    setUpButton(joinGameBlackPlayer3);
-
-    joinGameWhitePlayer = new JButton("Join Game");
-    joinGameWhitePlayer.setBounds(370, 300, 100, 25);
-    setUpButton(joinGameWhitePlayer);
-
-    joinGameWhitePlayer2 = new JButton("Join Game");
-    joinGameWhitePlayer2.setBounds(370, 350, 100, 25);
-    setUpButton(joinGameWhitePlayer2);
-
-    joinGameWhitePlayer3 = new JButton("Join Game");
-    joinGameWhitePlayer3.setBounds(370, 400, 100, 25);
-    setUpButton(joinGameWhitePlayer3);
+    //headline.setBounds(310, 10, 200, 60);
 
     showOpenGames = new JButton("Show Games");
-    showOpenGames.setBounds(320, 250, 100, 25);
+    //showOpenGames.setBounds(320, 250, 100, 25);
     setUpButton(showOpenGames);
 
     headline2 = new JLabel();
     headline2.setForeground(FONT_COLOR);
     headline2.setText("To start a new game choos a side ");
     headline2.setFont(new Font("Serif", Font.BOLD, FONTSIZE_HEADLINE2));
-    headline2.setBounds(220, 70, 380, 60);
+    //headline2.setBounds(220, 70, 380, 60);
 
     JPanel headline2Panel = new JPanel();
     headline2Panel.add(headline2);
     headline2Panel.setBackground(BACKGROUND_COLOR);
-    headline2Panel.setBounds(180, 70, 380, 60);
-
-    Game1 = new JLabel();
-    Game1.setForeground(FONT_COLOR);
-    Game1.setText("Game 1");
-    Game1.setFont(new Font("Serif", Font.BOLD, FONTSIZE_CLIENTS));
-    Game1.setBounds(300, 300, 100, 25);
-
-    Game2 = new JLabel();
-    Game2.setForeground(FONT_COLOR);
-    Game2.setText("Game 2");
-    Game2.setFont(new Font("Serif", Font.BOLD, FONTSIZE_CLIENTS));
-    Game2.setBounds(300, 350, 100, 25);
-
-    Game3 = new JLabel();
-    Game3.setForeground(FONT_COLOR);
-    Game3.setText("Game 3");
-    Game3.setFont(new Font("Serif", Font.BOLD, FONTSIZE_CLIENTS));
-    Game3.setBounds(300, 400, 100, 25);
-
-    joinGameBlackPlayer.setVisible(false);
-    joinGameBlackPlayer2.setVisible(false);
-    joinGameBlackPlayer3.setVisible(false);
-
-    joinGameWhitePlayer.setVisible(false);
-    joinGameWhitePlayer2.setVisible(false);
-    joinGameWhitePlayer3.setVisible(false);
-
-    Game1.setVisible(false);
-    Game2.setVisible(false);
-    Game3.setVisible(false);
+    //headline2Panel.setBounds(180, 70, 380, 60);
 
     quit = new JButton("Back");
     quit.setToolTipText("Go back to main menu");
-    quit.setBounds(350, 700, 50, 25);
+    //quit.setBounds(350, 700, 50, 25);
     setUpButton(quit);
-
-    add(blackButton);
-    add(whiteButton);
-    add(joinGameBlackPlayer);
-    add(joinGameBlackPlayer2);
-    add(joinGameBlackPlayer3);
-    add(joinGameWhitePlayer);
-    add(joinGameWhitePlayer2);
-    add(joinGameWhitePlayer3);
-    add(showOpenGames);
     add(quit);
+
+    startGame = new JButton("startGame");
+    startGame.setToolTipText("Start a new game.");
+    //startGame.setBounds(350, 500, 50, 25);
+    setUpButton(startGame);
+
+    add(showOpenGames);
+    add(startGame);
     add(headline);
     add(headline2Panel);
-    add(Game1);
-    add(Game2);
-    add(Game3);
+    */
+    setLayout(new BorderLayout());
+
+
+    JPanel panel = new JPanel(new FlowLayout());
+    test = new JPanel(new FlowLayout());
+
+    startGame = new JButton("start");
+    startGame.setEnabled(true);
+    showOpenGames = new JButton("show");
+    showOpenGames.setEnabled(true);
+    quit = new JButton("back");
+    quit.setEnabled(true);
+
+    panel.add(startGame);
+    panel.add(quit);
+    panel.add(showOpenGames);
+
+    add(panel);
+    add(test, BorderLayout.SOUTH);
+
+    showGames();
   }
 
   private void setUpButton(JButton button) {
@@ -183,140 +124,110 @@ public class LobbyView extends JPanel {
 
   /** Shows the open games depending on the information of the server. */
   private void showGames() {
-    if (model.getOpenGames().size() == OPEN_GAME_1
-        && model.getOpenGames().get(GAME_1).getHasPlayerBlack()) {
-      Game1.setVisible(true);
-      joinGameBlackPlayer.setVisible(true);
-    } else if (model.getOpenGames().size() == OPEN_GAME_1
-        && model.getOpenGames().get(GAME_1).getHasPlayerWhite()) {
-      Game1.setVisible(true);
-      joinGameWhitePlayer.setVisible(true);
-    } else if (model.getOpenGames().size() == OPEN_GAME_2
-        && model.getOpenGames().get(GAME_2).getHasPlayerBlack()) {
-      Game1.setVisible(true);
-      joinGameBlackPlayer.setVisible(true);
-      Game2.setVisible(true);
-      joinGameBlackPlayer2.setVisible(true);
-    } else if (model.getOpenGames().size() == OPEN_GAME_2
-        && model.getOpenGames().get(GAME_2).getHasPlayerWhite()) {
-      Game1.setVisible(true);
-      joinGameWhitePlayer.setVisible(true);
-      Game2.setVisible(true);
-      joinGameWhitePlayer2.setVisible(true);
-    } else if (model.getOpenGames().size() == OPEN_GAME_3
-        && model.getOpenGames().get(GAME_3).getHasPlayerBlack()) {
-      Game1.setVisible(true);
-      joinGameBlackPlayer.setVisible(true);
-      Game2.setVisible(true);
-      joinGameBlackPlayer2.setVisible(true);
-      Game3.setVisible(true);
-      joinGameBlackPlayer3.setVisible(true);
-    } else if (model.getOpenGames().size() == OPEN_GAME_3
-        && model.getOpenGames().get(GAME_3).getHasPlayerWhite()) {
-      Game1.setVisible(true);
-      joinGameWhitePlayer.setVisible(true);
-      Game2.setVisible(true);
-      joinGameWhitePlayer2.setVisible(true);
-      Game3.setVisible(true);
-      joinGameWhitePlayer3.setVisible(true);
+  /*
+    for (int i = 0; i < model.getOpenGames().size(); i++) {
+      JButton joinPlayerBlack = new JButton("join as black");
+      joinPlayerBlack.setEnabled(true);
+
+      joinPlayerBlack.addActionListener(
+              new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                  System.out.println("Clicked join Player Black button of game");
+                }
+              }
+      );
+
+    JButton joinPlayerWhite = new JButton("join as white");
+    joinPlayerBlack.setEnabled(true);
+    joinPlayerWhite.addActionListener(
+            new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked join Player White button of game");
+              }
+            }
+    );
+      System.out.println(model.getOpenGames().get(i).getHasPlayerBlack());
+      System.out.println(model.getOpenGames().get(i).getHasPlayerWhite());
+
+    if(!model.getOpenGames().get(i).getHasPlayerBlack()){
+      System.out.println("test black");
+      test.add(joinPlayerBlack);
+      joinPlayerBlack.setEnabled(true);
     }
+
+      if(!model.getOpenGames().get(i).getHasPlayerWhite()){
+        System.out.println("test white");
+        test.add(joinPlayerWhite);
+        joinPlayerWhite.setEnabled(true);
+      }
+
+      add(test, BorderLayout.SOUTH);
+    }
+    */
   }
 
   private void setActionListener() {
     quit.addActionListener(
-        new ActionListener() {
+            new ActionListener() {
 
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.showStartView();
-          }
-        });
-
-    blackButton.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.startNetworkGame(Player.BLACK);
-          }
-        });
-
-    whiteButton.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.startNetworkGame(Player.WHITE);
-          }
-        });
-
-    joinGameBlackPlayer.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.joinNetworkGame(GAME_1, Player.WHITE);
-            controller.startNetworkGame(Player.WHITE);
-          }
-        });
-
-    joinGameBlackPlayer2.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.joinNetworkGame(GAME_2, Player.WHITE);
-            controller.startNetworkGame(Player.WHITE);
-          }
-        });
-
-    joinGameBlackPlayer3.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.joinNetworkGame(GAME_3, Player.WHITE);
-            controller.startNetworkGame(Player.WHITE);
-          }
-        });
-
-    joinGameWhitePlayer.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.joinNetworkGame(0, Player.BLACK);
-            controller.startNetworkGame(Player.BLACK);
-          }
-        });
-
-    joinGameWhitePlayer2.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.joinNetworkGame(1, Player.BLACK);
-            controller.startNetworkGame(Player.BLACK);
-          }
-        });
-
-    joinGameWhitePlayer3.addActionListener(
-        new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            controller.joinNetworkGame(2, Player.BLACK);
-            controller.startNetworkGame(Player.BLACK);
-          }
-        });
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                controller.stopLobby();
+              }
+            });
 
     showOpenGames.addActionListener(
-        new ActionListener() {
+            new ActionListener() {
 
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            showGames();
-          }
-        });
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                showGames();
+              }
+            });
+
+    startGame.addActionListener(
+            new ActionListener() {
+
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                handleStartGameClick();
+              }
+            });
   }
+
+  private void handleStartGameClick(){
+    int result =
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Yes to start as Player black. No to start as Player White.",
+                    "Start new game",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+    // do nothing if user didn't click on the 'yes'-option
+    if (result == JOptionPane.YES_OPTION) {
+      try {
+        controller.startNetworkGame(Player.BLACK);
+      } catch (IOException e) {
+        JOptionPane.showMessageDialog(
+                null,
+                "Creating game failed. The following error occurred: " + e.getMessage(),
+                "Error creating game",
+                JOptionPane.ERROR_MESSAGE);
+      }
+    }else if(result == JOptionPane.NO_OPTION){
+      try {
+        controller.startNetworkGame(Player.WHITE);
+      } catch (IOException e) {
+        JOptionPane.showMessageDialog(
+                null,
+                "Creating game failed. The following error occurred: " + e.getMessage(),
+                "Error creating game",
+                JOptionPane.ERROR_MESSAGE);
+      }
+    }
+
+    }
 }

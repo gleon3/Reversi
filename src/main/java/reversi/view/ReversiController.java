@@ -76,20 +76,27 @@ public class ReversiController extends MouseAdapter implements Controller {
   public void startLobby(InetAddress address) {
     model = new NetworkReversi(address);
     try {
-      model.newGame();
+      model.startLobby();
+      view.showLobby(model);
     } catch (IOException e) { // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    view.showLobby(model);
+
   }
 
   @Override
-  public void startNetworkGame(Player player) {
+  public void stopLobby() {
     try {
-      model.startGame(player);
+      model.leaveLobby();
+      view.showStartMenu();
     } catch (IOException e) { // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public void startNetworkGame(Player player) throws IOException{
+      model.startGame(player);
     view.showGame(model);
   }
 

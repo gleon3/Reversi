@@ -89,21 +89,21 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
 
           // Paint the disks, according to the state of the model.
         } else if (model.getState().getField().get(new Cell(i, j)).get().getPlayer()
-            == Player.WHITE) {
+                == Player.WHITE) {
           g2d.setColor(DISK_COLOR_BRIGHT);
           g2d.fillOval(
-              i * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
-              j * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
-              FIELD_SIZE,
-              FIELD_SIZE);
+                  i * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
+                  j * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
+                  FIELD_SIZE,
+                  FIELD_SIZE);
         } else if (model.getState().getField().get(new Cell(i, j)).get().getPlayer()
-            == Player.BLACK) {
+                == Player.BLACK) {
           g2d.setColor(DISK_COLOR_BLACK);
           g2d.fillOval(
-              i * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
-              j * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
-              FIELD_SIZE,
-              FIELD_SIZE);
+                  i * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
+                  j * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
+                  FIELD_SIZE,
+                  FIELD_SIZE);
         }
       }
     }
@@ -117,19 +117,19 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
       for (Cell possibleMove : possibleMoves) {
         g2d.setColor(POSSIBLE_MOVES_WHITE);
         g2d.fillOval(
-            possibleMove.getColumn() * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
-            possibleMove.getRow() * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
-            FIELD_SIZE,
-            FIELD_SIZE);
+                possibleMove.getColumn() * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
+                possibleMove.getRow() * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
+                FIELD_SIZE,
+                FIELD_SIZE);
       }
     } else if (model.getState().getCurrentPlayer() == Player.BLACK) {
       for (Cell possibleMove : possibleMoves) {
         g2d.setColor(POSSIBLE_MOVES_BLACK);
         g2d.fillOval(
-            possibleMove.getColumn() * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
-            possibleMove.getRow() * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
-            FIELD_SIZE,
-            FIELD_SIZE);
+                possibleMove.getColumn() * FIELD_SIZE + X_COORDINATE_ABOVE_LEFT,
+                possibleMove.getRow() * FIELD_SIZE + Y_COORDINATE_ABOVE_LEFT,
+                FIELD_SIZE,
+                FIELD_SIZE);
       }
     }
   }
@@ -142,13 +142,13 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent event) {
     SwingUtilities.invokeLater(
-        new Runnable() {
+            new Runnable() {
 
-          @Override
-          public void run() {
-            handlePropertyChange(event);
-          }
-        });
+              @Override
+              public void run() {
+                handlePropertyChange(event);
+              }
+            });
   }
 
   /**
