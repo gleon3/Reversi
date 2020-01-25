@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ##[Zwischenabgabe 2] - 2020-01-12
 ### Added
 - Shell to play reversi in hotseat and singleplayer mode within the console
-- model that consists of necessary logic, so that reversi could be played in hotseat mode or in singleplayer mode
+- model that consists of necessary logic, so that reversi could be played in 
+  hotseat mode or in singleplayer mode
 - Implemented full functionality to play a hotseat and a singleplayer game with
   the GUI.
 - When the game has finished a message is shown to the user, with the 
@@ -32,3 +33,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the game lobby the button "quit" has changed to "back" and does not ask 
   anymore to quit the lobby.
 - Bigger size of the window for a better user experience.
+
+##[Finale Abgabe] - 2020-01-26
+### Added
+- Implemented full functionality to play a network game with the GUI.
+- LobbyView to start a new network game and show waiting games that can be 
+  joined.
+- Server address text field to input the server address on the main menu.  
+  
+### Changed
+- Presentation of the possible moves has been improved so it is presented by
+  half transparent disks instead of colored rectangles.
+- Board has changed from a check pattern to a uniform Reversi board.
