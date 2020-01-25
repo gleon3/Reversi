@@ -112,35 +112,35 @@ public class StartView extends JPanel {
 
   private void setActionListener() {
     hotseatGameButton.addActionListener(
-            new ActionListener() {
+        new ActionListener() {
 
-              @Override
-              public void actionPerformed(ActionEvent event) {
-                controller.startHotseatGame();
-              }
-            });
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            controller.startHotseatGame();
+          }
+        });
 
     singleplayerButton.addActionListener(
-            new ActionListener() {
+        new ActionListener() {
 
-              @Override
-              public void actionPerformed(ActionEvent event) {
-                controller.startAiGame();
-              }
-            });
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            controller.startAiGame();
+          }
+        });
 
     networkButton.addActionListener(
-            new ActionListener() {
+        new ActionListener() {
 
-              @Override
-              public void actionPerformed(ActionEvent event) {
-                try {
-                  address = InetAddress.getByName(serverAddress.getText());
-                } catch (UnknownHostException e) {
-                  e.printStackTrace();
-                }
-                controller.startLobby(address);
-              }
-            });
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            try {
+              address = InetAddress.getByName(serverAddress.getText());
+              controller.startLobby(address);
+            } catch (UnknownHostException e) {
+              e.printStackTrace();
+            }
+          }
+        });
   }
 }

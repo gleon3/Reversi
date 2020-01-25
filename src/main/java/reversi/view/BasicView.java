@@ -72,6 +72,7 @@ public class BasicView extends JFrame implements View {
   @Override
   public void showLobby(Model model) {
     lobbyView = new LobbyView(model, controller);
+    model.addPropertyChangeListener(lobbyView);
     contentPane.add(lobbyView, GAME_VIEW);
     cardLayout.show(getContentPane(), GAME_VIEW);
   }

@@ -4,9 +4,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Objects;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import reversi.model.AiReversi;
+// import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Model;
 import reversi.model.NetworkReversi;
@@ -33,6 +37,7 @@ public class ReversiController extends MouseAdapter implements Controller {
     view = new BasicView(this);
   }
 
+  @Override
   public void start() {
     view.showStartMenu();
     view.showView();
@@ -51,12 +56,22 @@ public class ReversiController extends MouseAdapter implements Controller {
   public void showStartView() {
     view.removeGame();
     leaveCurrentGame();
-    view.showStartMenu();
+    if (model instanceof NetworkReversi) {
+      view.showLobby(model);
+    } else {
+      view.showStartMenu();
+    }
   }
 
   private void leaveCurrentGame() {
-    if (model != null) {
-      model = null;
+    try {
+      Objects.requireNonNull(model).stopGame();
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Leaving network game failed. The following error occurred: " + e.getMessage(),
+          "Error leaving network game",
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -78,10 +93,9 @@ public class ReversiController extends MouseAdapter implements Controller {
     try {
       model.startLobby();
       view.showLobby(model);
-    } catch (IOException e) { // TODO Auto-generated catch block
+    } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
 
   @Override
@@ -89,24 +103,21 @@ public class ReversiController extends MouseAdapter implements Controller {
     try {
       model.leaveLobby();
       view.showStartMenu();
-    } catch (IOException e) { // TODO Auto-generated catch block
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @Override
-  public void startNetworkGame(Player player) throws IOException{
-      model.startGame(player);
+  public void startNetworkGame(Player player) throws IOException {
+    model.startGame(player);
     view.showGame(model);
   }
 
   @Override
-  public void joinNetworkGame(int gameID, Player player) {
-    try {
-      model.joinGame(gameID, player);
-    } catch (IOException e) { // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  public void joinNetworkGame(int gameID, Player player) throws IOException {
+    model.joinGame(gameID, player);
+    view.showGame(model);
   }
 
   @Override
