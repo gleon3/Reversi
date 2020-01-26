@@ -172,7 +172,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
    * message is shown.
    */
   private void setBoard() {
-    if (model.getState().getCurrentPhase() == Phase.RUNNING) {
+    if (model.getState().getCurrentPhase() == Phase.RUNNING || model.getState().getCurrentPhase() == Phase.FINISHED) {
       drawBoard.setVisible(true);
       infoLabel.setBounds(280, 50, 400, 50);
     } else {
@@ -280,12 +280,13 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
    * @param event The event that has been fired by the model.
    */
   private void handleChangeEvent(PropertyChangeEvent event) {
-
-    // Call paintComponent() when model has changed.
-    updateCurrentPlayerInfo();
-    openDialogIfGameIsOver();
-    hideErrorMessage();
-    setBoard();
+    if (event.getPropertyName().equals(Model.STATE_CHANGED)) {
+      updateCurrentPlayerInfo();
+      openDialogIfGameIsOver();
+      openDialogIfGameIsDisconnected();
+      hideErrorMessage();
+      setBoard();
+    }
   }
 
   /**
@@ -303,6 +304,26 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
       showDialogWindow("Finished!", "There's a winner: Player " + p);
     } else {
       showDialogWindow("Finished!", "Game is over. It's a tie!");
+    }
+  }
+
+  /**
+   * Checks the model if the game has disconnected. In that case, a dialog is shown to the user in
+   * which a respective message is shown.
+   */
+  private void openDialogIfGameIsDisconnected() {
+    if (model.getState().getCurrentPhase() != Phase.DISCONNECTED) {
+      return;
+    }
+    int result =
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "The network connection disconnected.",
+                    "Disconnect",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.ERROR_MESSAGE);
+    if (result == JOptionPane.CLOSED_OPTION || result == JOptionPane.OK_OPTION) {
+      controller.showLobby();
     }
   }
 

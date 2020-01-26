@@ -1,8 +1,12 @@
 package reversi.model;
 
+import reversi.model.network.Game;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,6 +46,24 @@ public interface Model {
   void newGame() throws IOException;
 
   /**
+   * Stops the current game.
+   *
+   * @throws IOException if any IOException occurs while stopping the current game
+   */
+  void stopGame() throws IOException;
+
+  void startLobby() throws IOException;
+
+  // TODO: javadoc
+  void startGame(Player player) throws IOException;
+
+  void joinGame(int gameID, Player player) throws IOException;
+
+  void leaveLobby() throws IOException;
+
+  List<Game> getOpenGames();
+
+  /**
    * Move disk to a cell and deal with the consequences. Moving a disk only works if their is
    * currently a game running, if the given cell doesn't contains a disk, and if moving to the cell
    * is a valid reversi move. After the move, it will be the turn of the next player, unless he has
@@ -61,7 +83,7 @@ public interface Model {
   /**
    * Return the {@link GameState} specific to this class.
    *
-   * @return The <code>GameState</code>-object.
+   * @return
    */
   GameState getState();
 

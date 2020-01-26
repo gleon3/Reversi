@@ -1,5 +1,7 @@
 package reversi.model;
 
+import reversi.model.network.Game;
+
 import static java.util.Objects.requireNonNull;
 
 import java.beans.PropertyChangeListener;
@@ -60,12 +62,7 @@ public class Reversi implements Model {
    * Invokes the firing of an event, such that any attached observer (i.e., {@link
    * PropertyChangeListener}) is notified that a change happened to this model.
    */
-  protected void notifyListeners() {
-    notifyListeners(true);
-    // TODO
-  }
-
-  private void notifyListeners(boolean wasActiveChange) {
+  protected void notifyListeners(boolean wasActiveChange) {
     support.firePropertyChange(STATE_CHANGED, null, this);
     if (wasActiveChange) {
       support.firePropertyChange(NEW_MOVE, null, this);
@@ -84,16 +81,50 @@ public class Reversi implements Model {
    *
    * @param state the new game state
    */
-  synchronized void setState(GameState state) {
+  public synchronized void setState(GameState state) {
     this.state = state;
     notifyListeners(false);
   }
 
   @Override
   public synchronized void newGame() {
+    newGame(true);
+  }
+
+  synchronized void newGame(Boolean notifyClient) {
     state = new GameState(new GameField());
 
-    notifyListeners();
+    notifyListeners(notifyClient);
+  }
+
+  @Override
+  public void startLobby() {}
+
+  @Override
+  public void stopGame() {
+    state.setCurrentPhase(Phase.FINISHED);
+
+    notifyListeners(false);
+  }
+
+  @Override
+  public void startGame(Player player) {
+    // do nothing
+  }
+
+  @Override
+  public void joinGame(int gameID, Player player) {
+    // do nothing
+  }
+
+  @Override
+  public void leaveLobby() {
+    // do nothing
+  }
+
+  @Override
+  public List<Game> getOpenGames() {
+    return new ArrayList<>();
   }
 
   @Override
@@ -128,7 +159,7 @@ public class Reversi implements Model {
     }
 
     getState().increaseMoveCounter();
-    notifyListeners();
+    notifyListeners(true);
 
     return true;
   }
@@ -166,7 +197,7 @@ public class Reversi implements Model {
   @Override
   public synchronized void undoMove() {
     state = stateHistory.pop();
-    notifyListeners();
+    notifyListeners(true);
   }
 
   /**
@@ -208,7 +239,7 @@ public class Reversi implements Model {
 
     for (Cell cell : list) {
       if (state.getField().get(cell).isPresent()
-              && state.getField().get(cell).get().getPlayer().equals(player)) {
+          && state.getField().get(cell).get().getPlayer().equals(player)) {
         break;
       } else {
         newList.add(cell);
@@ -229,7 +260,7 @@ public class Reversi implements Model {
   private boolean checkFullyInterrupted(List<Cell> list, Player player) {
 
     if (state.getField().get(list.get(0)).isEmpty()
-            || state.getField().get(list.get(0)).get().getPlayer().equals(player)) {
+        || state.getField().get(list.get(0)).get().getPlayer().equals(player)) {
       return false;
     }
 
@@ -405,7 +436,7 @@ public class Reversi implements Model {
     state.setCurrentPhase(Phase.FINISHED);
     state.setWinner(winner);
 
-    notifyListeners();
+    //notifyListeners(true);
   }
 
   /**
@@ -462,57 +493,57 @@ public class Reversi implements Model {
       if ((GameField.isWithinBounds(forward)
               && state.getField().get(forward).isPresent()
               && state
-              .getField()
-              .get(forward)
-              .get()
-              .getPlayer()
-              .equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(backward)
+                  .getField()
+                  .get(forward)
+                  .get()
+                  .getPlayer()
+                  .equals(Player.getOpponentOf(player)))
+          || (GameField.isWithinBounds(backward)
               && state.getField().get(backward).isPresent()
               && state
-              .getField()
-              .get(backward)
-              .get()
-              .getPlayer()
-              .equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(right)
+                  .getField()
+                  .get(backward)
+                  .get()
+                  .getPlayer()
+                  .equals(Player.getOpponentOf(player)))
+          || (GameField.isWithinBounds(right)
               && state.getField().get(right).isPresent()
               && state.getField().get(right).get().getPlayer().equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(left)
+          || (GameField.isWithinBounds(left)
               && state.getField().get(left).isPresent()
               && state.getField().get(left).get().getPlayer().equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(diagonallyForwardRight)
+          || (GameField.isWithinBounds(diagonallyForwardRight)
               && state.getField().get(diagonallyForwardRight).isPresent()
               && state
-              .getField()
-              .get(diagonallyForwardRight)
-              .get()
-              .getPlayer()
-              .equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(diagonallyForwardLeft)
+                  .getField()
+                  .get(diagonallyForwardRight)
+                  .get()
+                  .getPlayer()
+                  .equals(Player.getOpponentOf(player)))
+          || (GameField.isWithinBounds(diagonallyForwardLeft)
               && state.getField().get(diagonallyForwardLeft).isPresent()
               && state
-              .getField()
-              .get(diagonallyForwardLeft)
-              .get()
-              .getPlayer()
-              .equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(diagonallyBackwardRight)
+                  .getField()
+                  .get(diagonallyForwardLeft)
+                  .get()
+                  .getPlayer()
+                  .equals(Player.getOpponentOf(player)))
+          || (GameField.isWithinBounds(diagonallyBackwardRight)
               && state.getField().get(diagonallyBackwardRight).isPresent()
               && state
-              .getField()
-              .get(diagonallyBackwardRight)
-              .get()
-              .getPlayer()
-              .equals(Player.getOpponentOf(player)))
-              || (GameField.isWithinBounds(diagonallyBackwardLeft)
+                  .getField()
+                  .get(diagonallyBackwardRight)
+                  .get()
+                  .getPlayer()
+                  .equals(Player.getOpponentOf(player)))
+          || (GameField.isWithinBounds(diagonallyBackwardLeft)
               && state.getField().get(diagonallyBackwardLeft).isPresent()
               && state
-              .getField()
-              .get(diagonallyBackwardLeft)
-              .get()
-              .getPlayer()
-              .equals(Player.getOpponentOf(player)))) {
+                  .getField()
+                  .get(diagonallyBackwardLeft)
+                  .get()
+                  .getPlayer()
+                  .equals(Player.getOpponentOf(player)))) {
         hasAdjacentOppositeDisk = true;
       }
 

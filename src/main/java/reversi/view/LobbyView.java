@@ -41,7 +41,7 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
   private JPanel openGames;
   private JButton quit;
   private JButton startGame;
-  JScrollPane scrollPane;
+  private JScrollPane scrollPane;
   private static final Color BACKGROUND_COLOR = new Color(0, 153, 0);
   private static final Color FONT_COLOR = new Color(240, 240, 240);
   private static final int FONTSIZE_CLIENTS = 20;
@@ -52,7 +52,7 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
    *
    * @param controller Validates and forwards any user input.
    */
-  public LobbyView(Model model, Controller controller) {
+  LobbyView(Model model, Controller controller) {
     this.controller = controller;
     this.model = model;
     createDesign();
@@ -83,6 +83,8 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
 
     add(top, BorderLayout.NORTH);
     add(bottom, BorderLayout.SOUTH);
+
+    showGames();
   }
 
   private void setUpButton(JButton button) {
@@ -115,7 +117,6 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
     for (JPanel b : getOpenGames()) {
       openGames.add(b, c);
     }
-    ;
 
     scrollPane.setViewportView(openGames);
     add(scrollPane);
@@ -125,58 +126,59 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
   /** Sets up the buttons depending on which game color was chosen. */
   private List<JPanel> getOpenGames() {
     List<JPanel> buttonList = new ArrayList<>();
-    System.out.println(model.getOpenGames().size());
     int gameCounter = 1;
     for (Game game : model.getOpenGames()) {
-      JPanel p = new JPanel();
-      p.setBackground(BACKGROUND_COLOR);
+      if (!(game.getHasPlayerBlack() && game.getHasPlayerWhite())) {
+        JPanel p = new JPanel();
+        p.setBackground(BACKGROUND_COLOR);
 
-      int gameID = model.getOpenGames().indexOf(game);
+        int gameID = model.getOpenGames().indexOf(game);
 
-      JButton button = new JButton("Join Game");
-      button.setEnabled(true);
+        JButton button = new JButton("Join Game");
+        button.setEnabled(true);
 
-      if (game.getHasPlayerBlack()) {
-        button.setBackground(Color.WHITE);
-        button.setForeground(Color.BLACK);
-      } else if (game.getHasPlayerWhite()) {
-        button.setBackground(Color.BLACK);
-        button.setForeground(Color.WHITE);
-      } else {
-        throw new AssertionError("Unhandled!");
-      }
+        if (game.getHasPlayerBlack()) {
+          button.setBackground(Color.WHITE);
+          button.setForeground(Color.BLACK);
+        } else if (game.getHasPlayerWhite()) {
+          button.setBackground(Color.BLACK);
+          button.setForeground(Color.WHITE);
+        } else {
+          throw new AssertionError("Unhandled!");
+        }
 
-      button.addActionListener(
-          new ActionListener() {
+        button.addActionListener(
+            new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent event) {
-              try {
-                if (game.getHasPlayerBlack()) {
-                  controller.joinNetworkGame(gameID, Player.WHITE);
-                } else if (game.getHasPlayerWhite()) {
-                  controller.joinNetworkGame(gameID, Player.BLACK);
-                } else {
-                  throw new AssertionError("Unhandled!");
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                try {
+                  if (game.getHasPlayerBlack()) {
+                    controller.joinNetworkGame(gameID, Player.WHITE);
+                  } else if (game.getHasPlayerWhite()) {
+                    controller.joinNetworkGame(gameID, Player.BLACK);
+                  } else {
+                    throw new AssertionError("Unhandled!");
+                  }
+                } catch (IOException e) {
+                  JOptionPane.showMessageDialog(
+                      null,
+                      "Creating game failed. The following error occurred: " + e.getMessage(),
+                      "Error creating game",
+                      JOptionPane.ERROR_MESSAGE);
                 }
-              } catch (IOException e) {
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Creating game failed. The following error occurred: " + e.getMessage(),
-                    "Error creating game",
-                    JOptionPane.ERROR_MESSAGE);
               }
-            }
-          });
+            });
 
-      JLabel text = new JLabel("Game " + gameCounter + ":");
-      gameCounter++;
-      text.setForeground(FONT_COLOR);
-      text.setFont(new Font("Serif", Font.BOLD, FONTSIZE_CLIENTS));
-      p.add(text);
-      p.add(button);
+        JLabel text = new JLabel("Game " + gameCounter + ":");
+        gameCounter++;
+        text.setForeground(FONT_COLOR);
+        text.setFont(new Font("Serif", Font.BOLD, FONTSIZE_CLIENTS));
+        p.add(text);
+        p.add(button);
 
-      buttonList.add(p);
+        buttonList.add(p);
+      }
     }
 
     return buttonList;
@@ -253,7 +255,8 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent pce) {
-    System.out.println("property changed");
-    showGames();
+    if (pce.getPropertyName().equals(Model.STATE_CHANGED)) {
+      showGames();
+    }
   }
 }

@@ -158,6 +158,8 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
    * @param event The event that has been fired by the model.
    */
   private void handlePropertyChange(PropertyChangeEvent event) {
-    repaint();
+    if (event.getPropertyName().equals(Model.STATE_CHANGED)) {
+      repaint();
+    }
   }
 }

@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import reversi.model.AiReversi;
 // import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Model;
@@ -28,7 +27,6 @@ public class ReversiController extends MouseAdapter implements Controller {
   private static final int LAST_ROW = 7;
   private int mouseY;
   private int mouseX;
-  private Cell to;
   private Model model;
   Set<Cell> possibleMoves;
 
@@ -56,11 +54,17 @@ public class ReversiController extends MouseAdapter implements Controller {
   public void showStartView() {
     view.removeGame();
     leaveCurrentGame();
-    if (model instanceof NetworkReversi) {
+    if(model instanceof NetworkReversi){
       view.showLobby(model);
-    } else {
+    }else{
       view.showStartMenu();
     }
+  }
+
+  @Override
+  public void showLobby(){
+    view.removeGame();
+    view.showLobby(model);
   }
 
   private void leaveCurrentGame() {
@@ -83,7 +87,7 @@ public class ReversiController extends MouseAdapter implements Controller {
 
   @Override
   public void startAiGame() {
-    model = new AiReversi();
+    //model = new AiReversi();
     view.showGame(model);
   }
 
@@ -139,7 +143,7 @@ public class ReversiController extends MouseAdapter implements Controller {
 
       // Check which field the user has clicked.
     } else if (model.getState().getField().get(new Cell(mouseX, mouseY)).isEmpty()) {
-      to = new Cell(mouseX, mouseY);
+      Cell to = new Cell(mouseX, mouseY);
       if (possibleMoves != null) {
         possibleMoves.clear();
       }

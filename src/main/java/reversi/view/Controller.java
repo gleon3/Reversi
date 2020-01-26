@@ -21,6 +21,9 @@ public interface Controller {
   /** Sets the start screen up on which the user can select between different game modes. */
   void showStartView();
 
+  /** Sets the lobby screen up on which the user can start and join network games. */
+  void showLobby();
+
   /** Sets a hotseat game up that the user can afterwards play on. */
   void startHotseatGame();
 
