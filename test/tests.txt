@@ -1,0 +1,11 @@
+manuel tests
+
+- Tested font, button position and visual compatibility of the GUI manuel on Windows 10 1903 
+  and Linux Mint 19.3. 
+- Tested network function on multible systems for functionality.
+- All buttons was tested on functionality.
+- Game logic was tested by playing the game in the hotseat and singleplayer mode manually.
+
+automated tests
+
+-  

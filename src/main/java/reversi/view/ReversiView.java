@@ -60,6 +60,10 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     model.addPropertyChangeListener(this);
   }
 
+  /**
+   * Method that sets up the design of the view and positions all the objects like the game board
+   * and buttons.
+   */
   private void createDesign() {
 
     drawBoard.setBounds(110, 100, 560, 560);
@@ -112,6 +116,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     add(errorLabel);
     add(drawBoard);
     updateCurrentPlayerInfo();
+    setBoard();
     addMouseListener((MouseListener) controller);
   }
 
@@ -140,6 +145,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
           @Override
           public void actionPerformed(ActionEvent event) {
             handleReset();
+            deletePossibleMoves();
           }
         });
 
@@ -160,6 +166,22 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
             deletePossibleMoves();
           }
         });
+  }
+
+  /**
+   * Sets the game board in the moment two clients are connected to the server, otherwise a info
+   * message is shown.
+   */
+  private void setBoard() {
+    if (model.getState().getCurrentPhase() == Phase.RUNNING
+        || model.getState().getCurrentPhase() == Phase.FINISHED) {
+      drawBoard.setVisible(true);
+      infoLabel.setBounds(280, 50, 400, 50);
+    } else {
+      drawBoard.setVisible(false);
+      setInfoLabelText("Waiting for player two!");
+      infoLabel.setBounds(270, 300, 400, 50);
+    }
   }
 
   /** Shows a message and asks the user if he wants to quit the game. */
@@ -203,6 +225,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
     drawBoard.dispose();
   }
 
+  /** Shows an error message. */
   void showErrorMessage(String message) {
     errorLabel.setText(message);
   }
@@ -214,21 +237,31 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
   /** Shows all possible moves on the reversi game board. */
   private void showPossibleMoves() {
-    controller.possibleMoves = model.getPossibleMovesForPlayer(model.getState().getCurrentPlayer());
+    controller.setPossibleMoves(
+        model.getPossibleMovesForPlayer(model.getState().getCurrentPlayer()));
     drawBoard.repaint();
   }
 
   /** Deletes all current shown possible moves from the game board. */
   private void deletePossibleMoves() {
-    if (controller.possibleMoves != null) {
-      controller.possibleMoves.clear();
+    if (controller.getPossibleMoves() != null) {
+      controller.getPossibleMoves().clear();
     }
     drawBoard.repaint();
   }
 
   /** Updates the label text that informs the user about the current player. */
   private void updateCurrentPlayerInfo() {
-    infoLabel.setText("Current player: " + model.getState().getCurrentPlayer());
+    setInfoLabelText("Current player: " + model.getState().getCurrentPlayer());
+  }
+
+  /**
+   * Displays a message in the view.
+   *
+   * @param message The message to be displayed
+   */
+  private void setInfoLabelText(String message) {
+    infoLabel.setText(message);
   }
 
   @Override
@@ -250,11 +283,13 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
    * @param event The event that has been fired by the model.
    */
   private void handleChangeEvent(PropertyChangeEvent event) {
-
-    // Call paintComponent() when model has changed.
-    updateCurrentPlayerInfo();
-    openDialogIfGameIsOver();
-    hideErrorMessage();
+    if (event.getPropertyName().equals(Model.STATE_CHANGED)) {
+      updateCurrentPlayerInfo();
+      openDialogIfGameIsOver();
+      openDialogIfGameIsDisconnected();
+      hideErrorMessage();
+      setBoard();
+    }
   }
 
   /**
@@ -272,6 +307,26 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
       showDialogWindow("Finished!", "There's a winner: Player " + p);
     } else {
       showDialogWindow("Finished!", "Game is over. It's a tie!");
+    }
+  }
+
+  /**
+   * Checks the model if the game has disconnected. In that case, a dialog is shown to the user in
+   * which a respective message is shown.
+   */
+  private void openDialogIfGameIsDisconnected() {
+    if (model.getState().getCurrentPhase() != Phase.DISCONNECTED) {
+      return;
+    }
+    int result =
+        JOptionPane.showConfirmDialog(
+            this,
+            "The network connection disconnected.",
+            "Disconnect",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.ERROR_MESSAGE);
+    if (result == JOptionPane.CLOSED_OPTION || result == JOptionPane.OK_OPTION) {
+      controller.showLobby();
     }
   }
 

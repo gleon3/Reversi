@@ -4,6 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -11,6 +12,8 @@ import javax.swing.JOptionPane;
 import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Model;
+import reversi.model.NetworkReversi;
+import reversi.model.Player;
 import reversi.model.Reversi;
 
 /** Implementation of a controller class that handles and validates the user input. */
@@ -24,15 +27,15 @@ public class ReversiController extends MouseAdapter implements Controller {
   private static final int LAST_ROW = 7;
   private int mouseY;
   private int mouseX;
-  private Cell to;
   private Model model;
-  Set<Cell> possibleMoves;
+  private Set<Cell> possibleMoves;
 
   /** Creates a controller object for a given model. */
   public ReversiController() {
     view = new BasicView(this);
   }
 
+  @Override
   public void start() {
     view.showStartMenu();
     view.showView();
@@ -51,12 +54,29 @@ public class ReversiController extends MouseAdapter implements Controller {
   public void showStartView() {
     view.removeGame();
     leaveCurrentGame();
-    view.showStartMenu();
+    if (model instanceof NetworkReversi) {
+      view.showLobby(model);
+    } else {
+      view.showStartMenu();
+    }
   }
 
+  @Override
+  public void showLobby() {
+    view.removeGame();
+    view.showLobby(model);
+  }
+
+  /** Stops the current game and shows a message if an error occurred. */
   private void leaveCurrentGame() {
-    if (model != null) {
-      model = null;
+    try {
+      Objects.requireNonNull(model).stopGame();
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          null,
+          "Leaving network game failed. The following error occurred: " + e.getMessage(),
+          "Error leaving network game",
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -73,28 +93,51 @@ public class ReversiController extends MouseAdapter implements Controller {
   }
 
   @Override
-  public void startLobby() {
-    view.showLobby();
+  public void startLobby(InetAddress address) {
+    model = new NetworkReversi(address);
+    try {
+      model.startLobby();
+      view.showLobby(model);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
-  public void startNetworkGame(InetAddress serverAddress) {
-    // model = new NetworkReversi(serverAddress);
+  public void stopLobby() {
     try {
-      model.newGame();
-      view.showGame(model);
+      model.leaveLobby();
+      view.showStartMenu();
     } catch (IOException e) {
-      JOptionPane.showMessageDialog(
-          null,
-          "Creating network game failed. The following error occurred: " + e.getMessage(),
-          "Error creating network game",
-          JOptionPane.ERROR_MESSAGE);
+      e.printStackTrace();
     }
+  }
+
+  @Override
+  public void startNetworkGame(Player player) throws IOException {
+    model.startGame(player);
+    view.showGame(model);
+  }
+
+  @Override
+  public void joinNetworkGame(int gameID, Player player) throws IOException {
+    model.joinGame(gameID, player);
+    view.showGame(model);
   }
 
   @Override
   public void move(Cell to) {
     model.move(to);
+  }
+
+  @Override
+  public Set<Cell> getPossibleMoves() {
+    return possibleMoves;
+  }
+
+  @Override
+  public void setPossibleMoves(Set<Cell> player) {
+    possibleMoves = player;
   }
 
   @Override
@@ -111,7 +154,7 @@ public class ReversiController extends MouseAdapter implements Controller {
 
       // Check which field the user has clicked.
     } else if (model.getState().getField().get(new Cell(mouseX, mouseY)).isEmpty()) {
-      to = new Cell(mouseX, mouseY);
+      Cell to = new Cell(mouseX, mouseY);
       if (possibleMoves != null) {
         possibleMoves.clear();
       }

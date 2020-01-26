@@ -3,7 +3,10 @@ package reversi.model;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
+
+import reversi.model.network.Game;
 
 /**
  * The main interface of the reversi reversi.model. It provides all necessary methods for accessing
@@ -42,6 +45,51 @@ public interface Model {
   void newGame() throws IOException;
 
   /**
+   * Stops the current game.
+   *
+   * @throws IOException if any IOException occurs while stopping the current game
+   */
+  void stopGame() throws IOException;
+
+  /**
+   * Starts the lobby.
+   *
+   * @throws IOException if any IOException occurs while starting the lobby.
+   */
+  void startLobby() throws IOException;
+
+  /**
+   * Starts a new network game and waits for a second player.
+   *
+   * @param player Player that has been chosen.
+   * @throws IOException if any IOException occurs while starting a new game.
+   */
+  void startGame(Player player) throws IOException;
+
+  /**
+   * Joins an already started network game.
+   *
+   * @param gameID ID of the joined game.
+   * @param player Second player that joins the game.
+   * @throws IOException if any IOException occurs while joining a game.
+   */
+  void joinGame(int gameID, Player player) throws IOException;
+
+  /**
+   * Leaves the lobby.
+   *
+   * @throws IOException if any IOException occurs while leaving the lobby.
+   */
+  void leaveLobby() throws IOException;
+
+  /**
+   * Returns a list of all open games on the server with server address (serverAddress).
+   *
+   * @return List of open games.
+   */
+  List<Game> getOpenGames();
+
+  /**
    * Move disk to a cell and deal with the consequences. Moving a disk only works if their is
    * currently a game running, if the given cell doesn't contains a disk, and if moving to the cell
    * is a valid reversi move. After the move, it will be the turn of the next player, unless he has
@@ -61,7 +109,7 @@ public interface Model {
   /**
    * Return the {@link GameState} specific to this class.
    *
-   * @return The <code>GameState</code>-object.
+   * @return
    */
   GameState getState();
 

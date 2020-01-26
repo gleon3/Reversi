@@ -1,8 +1,12 @@
 package reversi.view;
 
+import java.io.IOException;
+
 import java.net.InetAddress;
+import java.util.Set;
 
 import reversi.model.Cell;
+import reversi.model.Player;
 
 /**
  * The main controller interface of the reversi game. It takes the actions from the user and handles
@@ -19,6 +23,9 @@ public interface Controller {
   /** Sets the start screen up on which the user can select between different game modes. */
   void showStartView();
 
+  /** Sets the lobby screen up on which the user can start and join network games. */
+  void showLobby();
+
   /** Sets a hotseat game up that the user can afterwards play on. */
   void startHotseatGame();
 
@@ -26,11 +33,23 @@ public interface Controller {
   void startAiGame();
 
   /** Start a client that can be connected to a server. */
-  void startNetworkGame(InetAddress serverAddress);
+  void startNetworkGame(Player player) throws IOException;
 
   /** Sets a Lobby to create a new network game and shows not started games. */
-  void startLobby();
+  void startLobby(InetAddress serverAddress);
 
+  /** Leaves the Lobby and shows the start menu. */
+  void stopLobby();
+
+  /** Method for joining an open game with an specific game id. */
+  void joinNetworkGame(int gameID, Player player) throws IOException;
+  
+  /** Method for getting the possible moves. */
+  Set<Cell> getPossibleMoves();
+  
+  /** Method for setting the possible moves. */
+  void setPossibleMoves(Set<Cell> player);
+  
   /**
    * Validates the input and in case of success asks the model to execute a move on the reversi
    * board.

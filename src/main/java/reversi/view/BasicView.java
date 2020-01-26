@@ -33,6 +33,7 @@ public class BasicView extends JFrame implements View {
   private Container contentPane;
   private CardLayout cardLayout;
 
+  /** Creates a basic view that handles the other views and sets a start view for the start. */
   BasicView(Controller controller) {
     super("Reversi");
     this.controller = requireNonNull(controller);
@@ -69,8 +70,9 @@ public class BasicView extends JFrame implements View {
   }
 
   @Override
-  public void showLobby() {
-    lobbyView = new LobbyView(controller);
+  public void showLobby(Model model) {
+    lobbyView = new LobbyView(model, controller);
+    model.addPropertyChangeListener(lobbyView);
     contentPane.add(lobbyView, GAME_VIEW);
     cardLayout.show(getContentPane(), GAME_VIEW);
   }
@@ -82,12 +84,6 @@ public class BasicView extends JFrame implements View {
       reversiView.dispose();
       reversiView = null;
     }
-  }
-
-  @Override
-  public void dispose() {
-    removeGame();
-    super.dispose();
   }
 
   @Override

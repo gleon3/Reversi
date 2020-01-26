@@ -5,4 +5,5 @@ public enum Phase {
   WAITING,
   RUNNING,
   FINISHED,
+  DISCONNECTED
 }
