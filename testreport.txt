@@ -1,0 +1,19 @@
+manual tests
+
+- Tested font, button position and visual compatibility of the GUI manuel on Windows 10 1903 
+  and Linux Mint 19.3. 
+- Tested network function on multible systems for functionality.
+- All buttons was tested on functionality.
+- Game logic was tested by playing the game in the hotseat and singleplayer mode manually.
+
+automated tests
+
+- used Unit-Tests to ensure that model works as intended
+
+- used Unit-Tests to ensure that AI does expected reasonable moves
+
+- Test-Coverage:
+
+    -packages: reversi.model (62%), reversi.model.ai (88%), rest not tested automatically
+    -classes: package reversi.model: Reversi (90%), AiReversi (88%), GameState (94%), GameField (84%), Cell (88%), Disk (100%), Player (83%), Phase (100%)
+              package reversi.model.ai: MinimaxAlgorithm (91%), CornerAssessor (69%), DiskCountAssesor (100%), MobilityAssesor (100%), ReversiAssessor (100%), WeightAssessor (100%), WinVelocityAssessor (42%)

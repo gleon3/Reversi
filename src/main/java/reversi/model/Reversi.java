@@ -67,7 +67,6 @@ public class Reversi implements Model {
     if (wasActiveChange) {
       support.firePropertyChange(NEW_MOVE, null, this);
     }
-    // TODO
   }
 
   @Override

@@ -60,12 +60,6 @@ class Client implements NetworkModule, PropertyChangeListener {
                   // check which type of message receivedJson is
                   String messageType = receivedJson.get("message-type").getAsString();
 
-                  System.out.println(
-                      "Client received message from server: "
-                          + receivedJson
-                          + " with message-type: "
-                          + messageType);
-
                   switch (messageType) {
                     case "GameState":
                       JsonElement stateJson = receivedJson.get("GameState");
@@ -121,7 +115,6 @@ class Client implements NetworkModule, PropertyChangeListener {
 
       String toSend = gson.toJson(messageJson);
 
-      System.out.println("Client sent startgame message: " + toSend);
       toServer.writeObject(toSend);
     }
   }
@@ -145,7 +138,6 @@ class Client implements NetworkModule, PropertyChangeListener {
 
       String toSend = gson.toJson(messageJson);
 
-      System.out.println("Client sent joingame message: " + toSend);
       toServer.writeObject(toSend);
     }
   }
@@ -165,7 +157,6 @@ class Client implements NetworkModule, PropertyChangeListener {
 
       String toSend = gson.toJson(messageJson);
 
-      System.out.println("Client sent endgame message: " + toSend);
       toServer.writeObject(toSend);
     }
   }
@@ -181,7 +172,6 @@ class Client implements NetworkModule, PropertyChangeListener {
     if (e.getPropertyName().equals(Reversi.NEW_MOVE)) {
       if (toServer != null) {
         try {
-          System.out.println("New move");
           toServer.reset();
           Gson gson = new Gson();
 
@@ -193,7 +183,6 @@ class Client implements NetworkModule, PropertyChangeListener {
 
           String toSend = gson.toJson(messageJson);
 
-          System.out.println("Client sent gamestate message: " + toSend);
           toServer.writeObject(toSend);
         } catch (IOException ex) {
           cleanUpConnection();

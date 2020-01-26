@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+
+import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Disk;
 import reversi.model.GameField;
@@ -108,7 +110,7 @@ public class Shell {
         isHotseatGame = true;
         break;
       case SINGLE:
-        // TODO: reversi = new AIReversi
+        reversi = new AiReversi();
         isHotseatGame = false;
         printErrorMsg("Gamemode not available yet");
         break;

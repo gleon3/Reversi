@@ -17,6 +17,11 @@ import java.util.Optional;
 
 import reversi.model.GameState;
 
+/**
+ * Implementation of a server class that contains all necessary functionalities in order to accept
+ * connection attempts by clients and to receive messages by the clients and send messages to the
+ * clients.
+ */
 public class Server implements NetworkModule {
 
   public static final int EXPECTED_GAMES = 10;
@@ -72,7 +77,7 @@ public class Server implements NetworkModule {
           receivingThread.start();
         }
       }
-      // close socket after EXPECTED_GAMES connections are accepted so that
+      // close socket after EXPECTED_CONNECTIONS connections are accepted so that
       // further connections are rejected.
       // If we just stop to read from the socket, further connections are
       // just ignored and new clients will not know that the server is unavailable
@@ -200,9 +205,10 @@ public class Server implements NetworkModule {
       }
     } catch (IOException e) {
       // client connection broke off
-      System.out.println("client disconnected");
       clientOutputStreams.remove(messagesToClient);
       clientSockets.remove(from);
+      System.out.println(
+          "Client disconnected. Now connected are " + clientSockets.size() + " clients.");
 
       if (getGameOf(messagesToClient).isPresent()) {
         Game game = getGameOf(messagesToClient).get();
@@ -234,7 +240,6 @@ public class Server implements NetworkModule {
   }
 
   private boolean validateGameState(GameState toSend, Game toSendTo) {
-    System.out.println(toSendTo.getLastStepSent());
     if (toSend.getMoveCounter() == 0) {
       toSendTo.setLastStepSent(-1);
       return true;
@@ -270,11 +275,11 @@ public class Server implements NetworkModule {
     for (ObjectOutputStream toClient : clientOutputStreams) {
       try {
         toClient.writeObject(message);
-        System.out.println("Server sent client: " + message);
       } catch (IOException e) {
         cleanUpConnection();
       }
     }
+    System.out.println("Server sent message to all clients: " + message);
   }
 
   private synchronized void sendToGame(Game game, String message) {
@@ -282,12 +287,12 @@ public class Server implements NetworkModule {
       try {
         if (toClient != null) {
           toClient.writeObject(message);
-          System.out.println("Server sent to specific game's clients: " + message);
         }
       } catch (IOException e) {
         cleanUpConnection();
       }
     }
+    System.out.println("Server sent to specific game's clients: " + message);
   }
 
   @Override
@@ -318,6 +323,7 @@ public class Server implements NetworkModule {
 
   /**
    * Main method of the server.
+   *
    * @param args The command line arguments.
    * @throws IOException if any IOException occurs while starting the server.
    */

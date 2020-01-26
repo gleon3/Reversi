@@ -1,6 +1,6 @@
 # Reversi game project
 
-This project consists of a early version of a reversi game and a simple gradle config for the SEP WS19/20 at LMU Munich.
+This project consists of the final version of a reversi game that can be played in a singleplayer mode, or against an opponent via hotseat mode, or over the network.
 
 ## Dependencies
 
@@ -31,7 +31,7 @@ run all checks and create an executable jar:
 ```
 
 If the command succeeds, the jar is found in `build/libs/ReversiMain.jar` and `build/libs/Server.jar`.
-This jar can be executed with `java -jar build/libs/ReversiMain.jar` and `build/libs/Server.jar`.
+This jar can be executed with `java -jar build/libs/ReversiMain.jar` and `java -jar build/libs/Server.jar`.
 
 
 ## Running the Program
