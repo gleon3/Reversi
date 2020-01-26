@@ -12,7 +12,7 @@ the correct gradle version.
 
 ## Opening the Project
 
-The Project's jar files can be opened with `java -jar releases/ReversiMain.jar` and 'java -jar releases/Server.jar'
+The Project's jar files can be opened with `java -jar releases/ReversiMain.jar` and `java -jar releases/Server.jar`
 
 ## Building the Project 
 
@@ -30,8 +30,8 @@ run all checks and create an executable jar:
 ./gradlew.bat build jar
 ```
 
-If the command succeeds, the jar is found in 'build/libs/ReversiMain.jar' and 'build/libs/Server.jar'.
-This jar can be executed with `java -jar build/libs/ReversiMain.jar` and 'build/libs/Server.jar'.
+If the command succeeds, the jar is found in `build/libs/ReversiMain.jar` and `build/libs/Server.jar`.
+This jar can be executed with `java -jar build/libs/ReversiMain.jar` and `build/libs/Server.jar`.
 
 
 ## Running the Program
