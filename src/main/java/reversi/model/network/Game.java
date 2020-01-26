@@ -1,10 +1,8 @@
 package reversi.model.network;
 
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.util.List;
 import java.util.ArrayList;
-import java.net.Socket;
+import java.util.List;
 
 /** Class responsible for containing all the components of a game and returning them if called. */
 public class Game {

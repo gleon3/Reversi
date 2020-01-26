@@ -11,7 +11,7 @@ public interface View {
   /** Shows the start menu to the user. */
   void showStartMenu();
 
-  /** Shows the hotseat game to the user. */
+  /** Shows the game surface game to the user. */
   void showGame(Model model);
 
   /** Shows the Lobby to the user. */

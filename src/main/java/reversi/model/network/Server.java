@@ -1,20 +1,20 @@
 package reversi.model.network;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-import reversi.model.GameState;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import reversi.model.GameState;
 
 public class Server implements NetworkModule {
 
@@ -25,7 +25,6 @@ public class Server implements NetworkModule {
 
   private List<Game> runningGames;
 
-  private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
   private ServerSocket socket;
 
   private Gson gson;

@@ -1,13 +1,12 @@
 package reversi.model.network;
 
-import reversi.model.NetworkReversi;
-import reversi.model.Player;
-
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+
+import reversi.model.NetworkReversi;
+import reversi.model.Player;
 
 /**
  * Class responsible for setting up the lobby, updating, creating games, joining games and leaving

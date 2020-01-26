@@ -1,13 +1,12 @@
 package reversi.model;
 
-import reversi.model.network.Game;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import reversi.model.network.Game;
 
 /**
  * The main interface of the reversi reversi.model. It provides all necessary methods for accessing
@@ -52,15 +51,42 @@ public interface Model {
    */
   void stopGame() throws IOException;
 
+  /**
+   * Starts the lobby.
+   *
+   * @throws IOException if any IOException occurs while starting the lobby.
+   */
   void startLobby() throws IOException;
 
-  // TODO: javadoc
+  /**
+   * Starts a new network game and waits for a second player.
+   *
+   * @param player Player that has been chosen.
+   * @throws IOException if any IOException occurs while starting a new game.
+   */
   void startGame(Player player) throws IOException;
 
+  /**
+   * Joins an already started network game.
+   *
+   * @param gameID ID of the joined game.
+   * @param player Second player that joins the game.
+   * @throws IOException if any IOException occurs while joining a game.
+   */
   void joinGame(int gameID, Player player) throws IOException;
 
+  /**
+   * Leaves the lobby.
+   *
+   * @throws IOException if any IOException occurs while leaving the lobby.
+   */
   void leaveLobby() throws IOException;
 
+  /**
+   * Returns a list of all open games on the server with server address (serverAddress).
+   *
+   * @return List of open games.
+   */
   List<Game> getOpenGames();
 
   /**

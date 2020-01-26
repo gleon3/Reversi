@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-// import reversi.model.AiReversi;
+import reversi.model.AiReversi;
 import reversi.model.Cell;
 import reversi.model.Model;
 import reversi.model.NetworkReversi;
@@ -54,19 +54,20 @@ public class ReversiController extends MouseAdapter implements Controller {
   public void showStartView() {
     view.removeGame();
     leaveCurrentGame();
-    if(model instanceof NetworkReversi){
+    if (model instanceof NetworkReversi) {
       view.showLobby(model);
-    }else{
+    } else {
       view.showStartMenu();
     }
   }
 
   @Override
-  public void showLobby(){
+  public void showLobby() {
     view.removeGame();
     view.showLobby(model);
   }
 
+  /** Stops the current game and shows a message if an error occurred. */
   private void leaveCurrentGame() {
     try {
       Objects.requireNonNull(model).stopGame();
@@ -87,7 +88,7 @@ public class ReversiController extends MouseAdapter implements Controller {
 
   @Override
   public void startAiGame() {
-    //model = new AiReversi();
+    model = new AiReversi();
     view.showGame(model);
   }
 

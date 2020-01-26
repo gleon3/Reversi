@@ -87,6 +87,7 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
     showGames();
   }
 
+  /** Method for setting up the buttons in a similar fashion. */
   private void setUpButton(JButton button) {
     button.setForeground(FONT_COLOR);
     button.setBackground(BACKGROUND_COLOR);
@@ -204,6 +205,7 @@ public class LobbyView extends JPanel implements PropertyChangeListener {
         });
   }
 
+  /** Handles the color choice of the user and starts a new network game with the chosen color. */
   private void handleStartGameClick() {
     Object[] options = new String[] {"Black", "White", "Cancel"};
 

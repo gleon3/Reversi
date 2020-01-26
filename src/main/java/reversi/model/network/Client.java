@@ -1,29 +1,29 @@
 package reversi.model.network;
 
-import com.google.gson.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
 import reversi.model.GameState;
 import reversi.model.NetworkReversi;
 import reversi.model.Player;
 import reversi.model.Reversi;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.*;
-import java.lang.reflect.Type;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 class Client implements NetworkModule, PropertyChangeListener {
 
   private Socket clientSocket;
   private ObjectOutputStream toServer;
-
-  private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
   private NetworkReversi reversi;
   private InetAddress serverAddress;

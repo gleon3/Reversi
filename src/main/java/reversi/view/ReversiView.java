@@ -145,6 +145,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
           @Override
           public void actionPerformed(ActionEvent event) {
             handleReset();
+            deletePossibleMoves();
           }
         });
 
@@ -172,7 +173,8 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
    * message is shown.
    */
   private void setBoard() {
-    if (model.getState().getCurrentPhase() == Phase.RUNNING || model.getState().getCurrentPhase() == Phase.FINISHED) {
+    if (model.getState().getCurrentPhase() == Phase.RUNNING
+        || model.getState().getCurrentPhase() == Phase.FINISHED) {
       drawBoard.setVisible(true);
       infoLabel.setBounds(280, 50, 400, 50);
     } else {
@@ -316,12 +318,12 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
       return;
     }
     int result =
-            JOptionPane.showConfirmDialog(
-                    this,
-                    "The network connection disconnected.",
-                    "Disconnect",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showConfirmDialog(
+            this,
+            "The network connection disconnected.",
+            "Disconnect",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.ERROR_MESSAGE);
     if (result == JOptionPane.CLOSED_OPTION || result == JOptionPane.OK_OPTION) {
       controller.showLobby();
     }
