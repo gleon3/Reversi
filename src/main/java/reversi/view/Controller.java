@@ -36,7 +36,7 @@ public interface Controller {
   /** Sets a Lobby to create a new network game and shows not started games. */
   void startLobby(InetAddress serverAddress);
 
-  /** Leaves the Lobby and shows the start menu */
+  /** Leaves the Lobby and shows the start menu. */
   void stopLobby();
 
   /** Method for joining an open game with an specific game id. */

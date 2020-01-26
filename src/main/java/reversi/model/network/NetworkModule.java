@@ -17,6 +17,8 @@ public interface NetworkModule {
 
   void close() throws IOException;
 
-  /** @return true if module is still running, false if it's not running */
+  /** 
+   * Returns true if module is running.
+   * @return true if module is still running, false if it's not running. */
   boolean isRunning();
 }

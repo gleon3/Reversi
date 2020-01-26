@@ -1,6 +1,11 @@
 package reversi.model.network;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,10 +14,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import reversi.model.GameState;
 
@@ -315,7 +316,11 @@ public class Server implements NetworkModule {
     }
   }
 
-  // main class
+  /**
+   * Main method of the server.
+   * @param args The command line arguments.
+   * @throws IOException if any IOException occurs while starting the server.
+   */
   public static void main(String[] args) throws IOException {
     System.out.println("Server is online.");
     Server s = new Server();

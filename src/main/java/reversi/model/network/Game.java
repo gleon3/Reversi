@@ -27,7 +27,7 @@ public class Game {
   /**
    * Sets clients to the Player color BLACK.
    *
-   * @param client
+   * @param client that connects to the server.
    */
   void setPlayerBlack(ObjectOutputStream client) {
     playerBlack = client;
@@ -37,7 +37,7 @@ public class Game {
   /**
    * Sets clients to the Player color WHITE.
    *
-   * @param client
+   * @param client that connects to the server.
    */
   void setPlayerWhite(ObjectOutputStream client) {
     playerWhite = client;
@@ -68,12 +68,16 @@ public class Game {
     hasPlayerWhite = value;
   }
 
-  /** @return true if a Player BLACK is existing in the game. */
+  /** 
+   * Returns true if player is black.
+   * @return true if a Player BLACK is existing in the game. */
   public boolean getHasPlayerBlack() {
     return hasPlayerBlack;
   }
 
-  /** @return true if a Player WHITE is existing in the game. */
+  /**
+   * Returns true if the player is white.
+   *  @return true if a Player WHITE is existing in the game. */
   public boolean getHasPlayerWhite() {
     return hasPlayerWhite;
   }

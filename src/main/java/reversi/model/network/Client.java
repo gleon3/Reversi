@@ -1,5 +1,10 @@
 package reversi.model.network;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -9,11 +14,6 @@ import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import reversi.model.GameState;
 import reversi.model.NetworkReversi;

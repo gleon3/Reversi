@@ -1,7 +1,5 @@
 package reversi.model;
 
-import reversi.model.network.Game;
-
 import static java.util.Objects.requireNonNull;
 
 import java.beans.PropertyChangeListener;
@@ -13,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import reversi.model.network.Game;
 
 /**
  * Implementation of a reversi class that handles the logic for a reversi game. It is the
@@ -436,7 +436,7 @@ public class Reversi implements Model {
     state.setCurrentPhase(Phase.FINISHED);
     state.setWinner(winner);
 
-    //notifyListeners(true);
+    // notifyListeners(true);
   }
 
   /**

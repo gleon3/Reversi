@@ -58,7 +58,7 @@ public class Lobby {
    * Makes the client start a new game.
    *
    * @param player type of player.
-   * @throws IOException
+   * @throws IOException if any IOException occurs while starting the new game
    */
   public void startGame(Player player) throws IOException {
     client.startGame(player);
@@ -68,7 +68,7 @@ public class Lobby {
    * Makes the client join an existing game.
    *
    * @param player type of player.
-   * @throws IOException
+   * @throws IOException if any IOException occurs while joining a game.
    */
   public void joinGame(int gameID, Player player) throws IOException {
     client.joinGame(gameID, player);
@@ -77,7 +77,7 @@ public class Lobby {
   /**
    * Makes the client start an existing game.
    *
-   * @throws IOException
+   * @throws IOException if any IOException occurs while leaving a game.
    */
   public void leaveGame() throws IOException {
     client.leaveGame();
