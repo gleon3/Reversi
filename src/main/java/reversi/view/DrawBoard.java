@@ -108,7 +108,7 @@ public class DrawBoard extends JPanel implements PropertyChangeListener {
       }
     }
 
-    possibleMoves = controller.possibleMoves;
+    possibleMoves = controller.getPossibleMoves();
 
     if (possibleMoves == null) {
 

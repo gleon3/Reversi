@@ -237,14 +237,15 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
 
   /** Shows all possible moves on the reversi game board. */
   private void showPossibleMoves() {
-    controller.possibleMoves = model.getPossibleMovesForPlayer(model.getState().getCurrentPlayer());
+    controller.setPossibleMoves(
+        model.getPossibleMovesForPlayer(model.getState().getCurrentPlayer()));
     drawBoard.repaint();
   }
 
   /** Deletes all current shown possible moves from the game board. */
   private void deletePossibleMoves() {
-    if (controller.possibleMoves != null) {
-      controller.possibleMoves.clear();
+    if (controller.getPossibleMoves() != null) {
+      controller.getPossibleMoves().clear();
     }
     drawBoard.repaint();
   }

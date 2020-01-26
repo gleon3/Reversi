@@ -1,7 +1,9 @@
 package reversi.view;
 
 import java.io.IOException;
+
 import java.net.InetAddress;
+import java.util.Set;
 
 import reversi.model.Cell;
 import reversi.model.Player;
@@ -41,7 +43,13 @@ public interface Controller {
 
   /** Method for joining an open game with an specific game id. */
   void joinNetworkGame(int gameID, Player player) throws IOException;
-
+  
+  /** Method for getting the possible moves. */
+  Set<Cell> getPossibleMoves();
+  
+  /** Method for setting the possible moves. */
+  void setPossibleMoves(Set<Cell> player);
+  
   /**
    * Validates the input and in case of success asks the model to execute a move on the reversi
    * board.

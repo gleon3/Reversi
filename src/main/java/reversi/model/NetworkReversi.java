@@ -10,7 +10,10 @@ import java.util.Set;
 import reversi.model.network.Game;
 import reversi.model.network.Lobby;
 
-// TODO
+/** Implementation of a NetworkReversi class that gives all functionality to play
+ *  a Reversi game over the network.
+ *
+ */
 public class NetworkReversi implements Model {
 
   private final InetAddress serverAddress;
@@ -19,6 +22,7 @@ public class NetworkReversi implements Model {
   private Lobby lobby;
   private Player assignedPlayer;
 
+  /** Creates a new NetworkReversi object. */
   public NetworkReversi(InetAddress serverAddress) {
     this.serverAddress = serverAddress;
   }
@@ -71,16 +75,19 @@ public class NetworkReversi implements Model {
     lobby.stop();
   }
 
+  /** Updates the lobby with a list of games. */
   public void updateLobby(List<Game> games) {
     lobby.updateLobby(games);
     delegate.notifyListeners(false);
   }
 
+  /** Sets the current phase to running. */
   public void startPhase() {
     getState().setCurrentPhase(Phase.RUNNING);
     delegate.notifyListeners(false);
   }
 
+  /** Sets the current phase to disconnected. */
   public void endGame() {
     getState().setCurrentPhase(Phase.DISCONNECTED);
     // delegate.notifyListeners(false);

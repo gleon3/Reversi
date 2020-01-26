@@ -28,7 +28,7 @@ public class ReversiController extends MouseAdapter implements Controller {
   private int mouseY;
   private int mouseX;
   private Model model;
-  Set<Cell> possibleMoves;
+  private Set<Cell> possibleMoves;
 
   /** Creates a controller object for a given model. */
   public ReversiController() {
@@ -128,6 +128,16 @@ public class ReversiController extends MouseAdapter implements Controller {
   @Override
   public void move(Cell to) {
     model.move(to);
+  }
+
+  @Override
+  public Set<Cell> getPossibleMoves() {
+    return possibleMoves;
+  }
+
+  @Override
+  public void setPossibleMoves(Set<Cell> player) {
+    possibleMoves = player;
   }
 
   @Override
