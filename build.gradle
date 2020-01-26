@@ -13,21 +13,57 @@ dependencies {
 	testCompile 'org.junit.jupiter:junit-jupiter:5.5.2'
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
 	testCompile "org.mockito:mockito-core:2.+"
-        compile "com.google.code.gson:gson:2.8.0"
+	compile "com.google.code.gson:gson:2.8.6"
 }
 
 application {
     mainClassName = 'reversi.ReversiMain'
 }
 
-jar {
+task reversiMainJar(type: Jar) {
+  dependsOn compileJava
+
+  archiveBaseName = "ReversiMain"
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  with jar
+  
+  from (sourceSets.main.output) {
+    include "**"
+    exclude "**/Server.class"  // not needed for ReversiMain
+  }
+
   manifest {
     attributes(
-      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
       'Main-Class': 'reversi.ReversiMain'
     )
   }
 }
+
+task serverJar(type: Jar) {
+  dependsOn compileJava
+
+  archiveBaseName = "Server"
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  with jar
+  
+  from (sourceSets.main.output) {
+    include "**"
+    exclude "**/ReversiMain.class"  // not needed for Server
+  }
+
+  manifest {
+    attributes(
+      'Main-Class': 'reversi.model.network.Server'
+    )
+  }
+}
+
+
+task jar(type: Jar, overwrite: true) {
+  dependsOn reversiMainJar, serverJar
+  actions = []  // don't do anything besides calling the dependent jar tasks
+}
+
 
 checkstyle {
   configFile = file('test/checkstyle.xml')
