@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashSet;
 import java.util.Optional;
 
 import javax.swing.JButton;
@@ -245,7 +246,7 @@ public class ReversiView extends JPanel implements PropertyChangeListener {
   /** Deletes all current shown possible moves from the game board. */
   private void deletePossibleMoves() {
     if (controller.getPossibleMoves() != null) {
-      controller.getPossibleMoves().clear();
+      controller.setPossibleMoves(new HashSet<>());
     }
     drawBoard.repaint();
   }
